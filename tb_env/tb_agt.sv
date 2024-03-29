@@ -22,10 +22,11 @@ Created on: March 28th, 2024
 
 class agt;
     //Instanticate the mailboxes
-    mailbox #(tb_trans) gen2agt, agt2dvr;
+    mailbox #(tb_trans) gen2agt, agt2dvr, agt2scb, scb2agt;
 
     //Instanciate somewhere to hold a transaction object
-    tb_trans tr;
+    tb_trans tr, trRtrn;
+
 
     //Semaphores for keeping track of how many pending transactions have been sent to the DUT
     //Needs to be accessible from the scoreboard, i'm pretty sure.
@@ -37,9 +38,11 @@ class agt;
     req_tag_t in3_avl_tags[$] = {TAG0, TAG1, TAG2, TAG3};
     req_tag_t in4_avl_tags[$] = {TAG0, TAG1, TAG2, TAG3};
 
-    function new(mailbox #(tb_trans) gen2agt, agt2dvr);
+    function new(mailbox #(tb_trans) gen2agt, agt2dvr, agt2scb, scb2agt);
         this.gen2agt = gen2agt;
         this.agt2dvr = agt2dvr;
+        this.agt2scb = agt2scb;
+        this.scb2agt = scb2agt; //This is purely for returning semaphores and keys.
         //might need more here later?
     endfunction
 
@@ -51,10 +54,13 @@ class agt;
 
         forever begin //maybe change the forever to have a termination condition of some sort?
             gen2agt.get(tr); //Get a transaction object
-            
+
+            releaseKey(); //Check to see if any keys are waiting to be returned
+            #10
             //Check which port the transaction wants, attempt to get it a key (secures it 1/4 of the tags)
             //if able to grab a key, assign first available tag, tag queue SHOULD never be empty.
             //If it's empty for some reason... timing issue? Scoreboard should be returning them before releasing the key.
+            //How to return the key? Another mailbox that just says the keys are free now? Maybe. 
             case(tr.port)
                 1: begin
                     in1_sem.get(1); //DONT FORGET TO RETURN THE KEYS IN THE SCOREBOARD/CHECKER!!!!
@@ -77,7 +83,7 @@ class agt;
                     $display($time, ": Assigning port %0b current transaction tag: %0b", tr.port, tr.tag); //DEBUG
                 end
                 default:
-                    $display($time, ": Error with the agent case statement! Bad port data!");
+                    $display($time, ": Error with the agent tag assign case statement! Bad port data!");
             endcase
             agt2dvr.put(tr); //push the transaction to the driver mailbox
             //TODO //push the transaction to the scoreboard mailbox
@@ -85,7 +91,35 @@ class agt;
         $display($time, ": Ending tb_agt");
     endtask: main
 
+    task releaseKey();
+        //TODO
+        if(scb2agt.num() > 0) begin
+            scb2agt.get(trRtrn);
+
+            case(trRtrn.port)
+                1: begin
+                    in1_sem.put(1);
+                    in1_avl_tags.push_back(trRtrn.tag);
+                end
+                2: begin
+                    in2_sem.put(1);
+                    in2_avl_tags.push_back(trRtrn.tag);
+                end
+                3: begin
+                    in3_sem.put(1);
+                    in3_avl_tags.push_back(trRtrn.tag);
+                end
+                4: begin
+                    in4_sem.put(1);
+                    in4_avl_tags.push_back(trRtrn.tag);
+                end
+                default:
+                    $display($time, ": Error with the agent tag return case statement! Bad port data!");
+            endcase
+        end
+    endtask: releaseKey
+
     task wrap_up();
         //Put end of test stuff here, if needed.
-    endtask
+    endtask: wrap_up
 endclass: agt
