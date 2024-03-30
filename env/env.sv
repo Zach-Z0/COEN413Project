@@ -44,7 +44,7 @@ tb_gen gen;
 
 //Instanciate mailboxes here
 //Mailboxes: Generator -> Agent, Agent -> Driver(TODO), Monitor -> Scoreboard/Checker(TODO)
-mailbox #(tb_trans) gen2agt, agt2dvr;
+mailbox #(tb_trans) gen2agt, agt2dvr, agt2scb, scb2agt, mon2scb ;
 
 //Interface declaration goes here, I think
 //Virtual interface???? Probably.
@@ -54,9 +54,13 @@ function new(/*Interface here*/);
 	//Mailboxs go here, 16 items max in each due to (4 input lines) * (4 outstanding commands per line)
 	//This might be wrong? I don't know, it's my best guess right now.
 	//Possible deadlock by doing this???? Probably not.
+	//TODO (?)
 	gen2agt = new(16);
 	agt2dvr = new(16);
-	//TODO
+	agt2scb = new(16);
+	scb2agt = new(16);
+	mon2scb = new(); //I don't think this one needs a limit?
+
 
 	tcfg = new(); //Instanciate test config
 
@@ -68,7 +72,7 @@ function new(/*Interface here*/);
 		end
 	//call new() function for all modules of the test bench
 	gen = new(gen2agt, tcfg.trans_cnt);
-	agt = new(gen2agt, agt2dvr); //Might need more stuff in here? Not sure
+	agt = new(gen2agt, agt2dvr, agt2scb, scb2agt); //Might need more stuff in here? Not sure
 	//TODO
 	//Driver
 	//Monitor
@@ -80,16 +84,15 @@ virtual task pre_test();
 	//Sync scoreboard max_trans_cnt with generator max_trans_cnt
 	fork
 		//start scoreboard, driver, monitor, agent mains
+		agt.main();
 	join_none
 endtask: pre_test
 
 virtual task test();
 	//TODO
-	//reset the DUT through the Driver module
-	//start all modules main tasks here
+	//reset the DUT through the Driver module	
 	fork
 		gen.main();
-		agt.main();
 		//TODO
 	join_none
 endtask: test	
