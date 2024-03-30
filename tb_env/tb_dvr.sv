@@ -16,26 +16,25 @@ Created on: March 29th, 2024
 `include "tb_env/defs.sv"
 
 class driver
+    //Interface object declaration
+    virtual tb_if.Master tb_master_if;
 
-//Interface object declaration goes here
+    //Mailbox
+    mailbox #(tb_trans) agt2dvr;
 
-//Mailbox
-mailbox #(tb_trans) agt2dvr;
+    function new(virtual apb_if.Master tb_master_if, mailbox #(apb_trans) agt2dvr); 
+    this.tb_master_if = tb_master_if;
+    this.agt2dvr = agt2dvr;
+    endfunction: new
 
-function new(/*Interface goes here*/, mailbox #(apb_trans) agt2dvr); 
-//TODO
-//Interface declaration HERE
-this.agt2dvr = agt2dvr;
-endfunction: new
+    task main();
+    //TODO
+    endtask: main
 
-task main();
-//TODO
-endtask: main
+    task reset();
+    //TODO
+    endtask: reset
 
-task reset();
-//TODO
-endtask: reset
-
-//Other tasks here as needed
+    //Other tasks here as needed
 
 endclass: driver
