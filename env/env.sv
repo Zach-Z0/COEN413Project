@@ -6,6 +6,7 @@ Environment class which instanciates the following:
 
 
 Zachary Zazzara (40096894)
+ze xi si (40175054)
 
 Created on: March 28th, 2024
 
@@ -14,6 +15,11 @@ Created on: March 28th, 2024
 `include "tb_env/tb_trans.sv"
 `include "tb_env/tb_gen.sv"
 `include "tb_env/tb_agt.sv"
+`include "tb_env/tb_dvr.sv"
+`include "tb_env/tb_moni.sv"
+`include "tb_env/tb_if.sv"
+`include "tb_env/tb_scb.sv"
+
 //TODO
 //Will need more includes here as we write more classes
 
@@ -33,8 +39,17 @@ class env;
 test_cfg tcfg;
 
 //Instanciate transactors
-//TODO
+
+tb_trans trans; 
 tb_gen gen;
+tb_agt agt;
+tb_moni mon;
+tb_dvr dvr;
+tb_if localinterface;
+tb_scb scb;
+
+//i think transaction is included so no need.
+//i think we need to do the agent initiation i didnt see it
 
 //driver
 //monistor
@@ -48,8 +63,14 @@ mailbox #(tb_trans) gen2agt, agt2dvr, agt2scb, scb2agt, mon2scb ;
 
 //Interface declaration goes here, I think
 //Virtual interface???? Probably.
+//ok i will write it then and basically copy it
 
-function new(/*Interface here*/);
+function new(tb_if globalinterface);
+
+//TODO: we need to plug the interface from wrapper 
+
+	this.localinterface = globalinterface;
+
 	//'this.' interface assignment here
 	//Mailboxs go here, 16 items max in each due to (4 input lines) * (4 outstanding commands per line)
 	//This might be wrong? I don't know, it's my best guess right now.
@@ -59,7 +80,7 @@ function new(/*Interface here*/);
 	agt2dvr = new(16);
 	agt2scb = new(16);
 	scb2agt = new(16);
-	mon2scb = new(); //I don't think this one needs a limit?
+	mon2scb = new(32); // i put a 32 bit limit here as all response are like max 32
 
 
 	tcfg = new(); //Instanciate test config
@@ -71,8 +92,16 @@ function new(/*Interface here*/);
 			$finish;
 		end
 	//call new() function for all modules of the test bench
+
 	gen = new(gen2agt, tcfg.trans_cnt);
-	agt = new(gen2agt, agt2dvr, agt2scb, scb2agt); //Might need more stuff in here? Not sure
+	//this is the agent
+	agt = new(gen2agt, agt2dvr, agt2scb, scb2agt); //future implementation maybe
+	//already assigned the modport
+	dvr = new (localinterface, agt2dvr);
+
+	mon = new ();
+	scb = new ();
+
 	//TODO
 	//Driver
 	//Monitor
@@ -89,8 +118,9 @@ virtual task pre_test();
 endtask: pre_test
 
 virtual task test();
-	//TODO
+	//TODO:DONE i think
 	//reset the DUT through the Driver module	
+	dvr.reset(); 
 	fork
 		gen.main();
 		//TODO

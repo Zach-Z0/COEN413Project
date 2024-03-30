@@ -3,6 +3,7 @@
 Transaction object class that should then be used by the generator class.
 
 Zachary Zazzara (40096894)
+ze xi si (40175054)
 
 Created on: March 27th, 2024
 
@@ -34,6 +35,7 @@ class tb_trans;
 	//Need contstrains for these randoms
 	constraint c_cmd {cmd inside {ADD, SUB, LSH, RSH, NOP};}
 	constraint c_port {port inside {1,2,3,4};}
+	//i see now we have 4 port!
 	
 //Functions
 function new();

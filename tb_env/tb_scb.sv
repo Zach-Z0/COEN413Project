@@ -1,0 +1,15 @@
+//zexi si 40175054 
+
+class scb;
+    //OUTPUT WILL COME TO SCB FOR VERIF AND THEN OUTPUT GOOD BAD
+    //WILL GIVE A NUMERICAL RESULT AT TEH END, %?
+
+
+
+
+
+
+
+
+
+endmodule

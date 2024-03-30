@@ -6,11 +6,13 @@ Will need a wrapper class to neatly connect the interface to the DUT.
 
 Needs to be sensisitve to NEGATIVE EDGE of clock as defined in the design specification
 Zachary Zazzara (40096894)
+zexi si (40175054)
 
 Created on: March 29th, 2024
 */
 
 `include "tb_env/defs.sv"
+//all parameter, make sense
 
 interface tb_if(input ifClk); //clock will come frop TB top module, which doesn't exist yet
 
@@ -34,6 +36,8 @@ interface tb_if(input ifClk); //clock will come frop TB top module, which doesn'
         //Make changes here after more work is done on the driver functions/tasks (?)
         //I THINK only need outputs here for the transactions going Driver -> DUT and nothing else... but we'll see I guess.
         output ifRst;
+        output ifClk;
+        //here too
         output ifReq1_cmd_in;
         output ifReq2_cmd_in;
         output ifReq3_cmd_in;
@@ -53,7 +57,11 @@ interface tb_if(input ifClk); //clock will come frop TB top module, which doesn'
         //I think most everything here should be an input?
         //Timing question applies here too.
         //Make changes here after more work is done on the monitor functions (?)
+        
         //I THINK only need outputs here for the transactions going DUT -> Monitor and nothing else... but we'll see I guess.
+        input ifClk;
+        input ifRst;
+        //just put these input clks here in case needed as we never know
         input ifResp1_out;
         input ifResp2_out;
         input ifResp3_out;
