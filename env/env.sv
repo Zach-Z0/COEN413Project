@@ -2,6 +2,7 @@
 
 Environment class which instanciates the following:
 	-TB Generator
+	-TB Agent
 	-More items TBD
 
 
