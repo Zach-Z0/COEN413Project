@@ -3,9 +3,7 @@ Driver class which handles taking the transactions recieved from the agent class
 them into low level commands for the input lines of the DUT. 
 
 Also handles reset commands and passing through the clock.
-Needs to work closely with the interface, which hasn't been defined yet as of writing this note (March 29th).
-
-NOTE: Interface needs to be sensitive to the NEGATIVE EDGE of the clock NOT positive edge!!!
+Needs to work closely with the interface.
 
 Zachary Zazzara (40096894)
 zexi si (40175054)
@@ -29,14 +27,31 @@ class driver
     endfunction: new
 
     task main();
-    //TODO
-
+        //TODO
     endtask: main
 
     task reset();
-    //TODO
-    //That is not how the design specification says to reset the DUT
+        @(this.tb_master_if); //Waits for negative edge of the clock, this might not be necessary.
+
+        //Hold reset HI for 3 clock cycles
+        tb_master_if.ifRst <= 1; 
+        //Hold all inputs LO for 3 clock cycles
+        tb_master_if.ifReq1_cmd_in <= 0;
+        tb_master_if.ifReq2_cmd_in <= 0;
+        tb_master_if.ifReq3_cmd_in <= 0;
+        tb_master_if.ifReq4_cmd_in <= 0;
+        tb_master_if.ifReq1_data_in <= 0;
+        tb_master_if.ifReq2_data_in <= 0;
+        tb_master_if.ifReq3_data_in <= 0;
+        tb_master_if.ifReq4_data_in <= 0;
+        tb_master_if.ifReq1_tag_in <= 0;
+        tb_master_if.ifReq2_tag_in <= 0;
+        tb_master_if.ifReq3_tag_in <= 0;
+        tb_master_if.ifReq4_tag_in <= 0;
+
+        //Wait the 3 clock cycles, did 4 for good measure.
+        repeat(4) @(this.tb_master_if);
     endtask: reset
 
-    //Other tasks here as needed
+    //Other tasks here as needed (?)
 endclass: driver
