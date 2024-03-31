@@ -7,6 +7,7 @@ Environment class which instanciates the following:
 
 
 Zachary Zazzara (40096894)
+ze xi si (40175054)
 
 Created on: March 28th, 2024
 
@@ -15,6 +16,11 @@ Created on: March 28th, 2024
 `include "tb_env/tb_trans.sv"
 `include "tb_env/tb_gen.sv"
 `include "tb_env/tb_agt.sv"
+`include "tb_env/tb_dvr.sv"
+`include "tb_env/tb_moni.sv"
+`include "tb_env/tb_if.sv"
+`include "env/scoreboard.sv"
+
 //TODO
 //Will need more includes here as we write more classes
 
@@ -34,14 +40,15 @@ class env;
 test_cfg tcfg;
 
 //Instanciate transactors
-//TODO
+//TODO, this might be done?
 tb_gen gen;
+tb_agt agt;
+tb_moni mon;
+tb_dvr dvr;
+tb_scb scb;
 
-//driver
-//monistor
-//scoreboard/checker
-//agent
-
+//Interface declaration goes here.
+//Virtual interface
 
 //Instanciate mailboxes here
 //Mailboxes: Generator -> Agent, Agent -> Driver(TODO), Monitor -> Scoreboard/Checker(TODO)
@@ -49,9 +56,12 @@ mailbox #(tb_trans) gen2agt, agt2dvr, agt2scb, scb2agt, mon2scb ;
 
 //Interface declaration goes here, I think
 //Virtual interface???? Probably.
+//ok i will write it then and basically copy it
 
 function new(/*Interface here*/);
+
 	//'this.' interface assignment here
+
 	//Mailboxs go here, 16 items max in each due to (4 input lines) * (4 outstanding commands per line)
 	//This might be wrong? I don't know, it's my best guess right now.
 	//Possible deadlock by doing this???? Probably not.
@@ -72,8 +82,10 @@ function new(/*Interface here*/);
 			$finish;
 		end
 	//call new() function for all modules of the test bench
+
 	gen = new(gen2agt, tcfg.trans_cnt);
-	agt = new(gen2agt, agt2dvr, agt2scb, scb2agt); //Might need more stuff in here? Not sure
+	agt = new(gen2agt, agt2dvr, agt2scb, scb2agt); //future implementation maybe
+
 	//TODO
 	//Driver
 	//Monitor
@@ -92,6 +104,7 @@ endtask: pre_test
 virtual task test();
 	//TODO
 	//reset the DUT through the Driver module	
+	dvr.reset(); 
 	fork
 		gen.main();
 		//TODO

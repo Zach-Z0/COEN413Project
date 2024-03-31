@@ -8,6 +8,7 @@ Needs to work closely with the interface, which hasn't been defined yet as of wr
 NOTE: Interface needs to be sensitive to the NEGATIVE EDGE of the clock NOT positive edge!!!
 
 Zachary Zazzara (40096894)
+zexi si (40175054)
 
 Created on: March 29th, 2024
 */
@@ -29,12 +30,13 @@ class driver
 
     task main();
     //TODO
+
     endtask: main
 
     task reset();
     //TODO
+    //That is not how the design specification says to reset the DUT
     endtask: reset
 
     //Other tasks here as needed
-
 endclass: driver

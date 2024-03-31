@@ -4,13 +4,15 @@ Top level file for the program, instantiates the interface, testbench and DUT.
 This is pretty much taken exactly as it is from lab 3 & 4
 
 Zachary Zazzara (40096894)
+ze xi si (40175054)
 
 I think this is done?
 
 Created on: March 29th, 2024
 */
 
-`include "env/wrapper.sv" //I might not need this?
+`include "env/wrapper.sv" //This might cause compiler errors, leaving it here for now
+`include "tb_env/tb_if.sv"
 
 module top;
     parameter SIM_CYCLE = 100;
