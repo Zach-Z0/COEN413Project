@@ -11,8 +11,7 @@ I think this is done?
 Created on: March 29th, 2024
 */
 
-//maybe we need these, no harm putting here
-`include "env/wrapper.sv"
+`include "env/wrapper.sv" //This might cause compiler errors, leaving it here for now
 `include "tb_env/tb_if.sv"
 
 module top;
@@ -21,8 +20,6 @@ module top;
     bit clk;
     always #(SIM_CYCLE/2)
         clk = ~clk;
-
-//==============EXECUTION PART===============
 
     tb_if interf(clk); //Create interface
     test tb1(interf); //Create testbench

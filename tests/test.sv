@@ -16,14 +16,13 @@ program automatic test(tb_if interf)
     `include "env/env.sv"
 
     //Instanciate top level environment
-    env localenv;
-    //this is more clear imo
+    env mainEnv;
 
     initial begin
-        localenv = new(interf);
+        mainenv = new(interf);
 
         //start the tests
-        localenv.run();
+        mainEnv.run();
         
         $finish;
     end
