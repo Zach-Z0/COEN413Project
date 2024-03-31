@@ -18,7 +18,7 @@ Created on: March 28th, 2024
 `include "tb_env/tb_dvr.sv"
 `include "tb_env/tb_moni.sv"
 `include "tb_env/tb_if.sv"
-`include "tb_env/tb_scb.sv"
+`include "env/scoreboard.sv"
 
 //TODO
 //Will need more includes here as we write more classes
@@ -39,23 +39,15 @@ class env;
 test_cfg tcfg;
 
 //Instanciate transactors
-
-tb_trans trans; 
+//TODO, this might be done?
 tb_gen gen;
 tb_agt agt;
 tb_moni mon;
 tb_dvr dvr;
-tb_if localinterface;
 tb_scb scb;
 
-//i think transaction is included so no need.
-//i think we need to do the agent initiation i didnt see it
-
-//driver
-//monistor
-//scoreboard/checker
-//agent
-
+//Interface declaration goes here.
+//Virtual interface
 
 //Instanciate mailboxes here
 //Mailboxes: Generator -> Agent, Agent -> Driver(TODO), Monitor -> Scoreboard/Checker(TODO)
@@ -65,13 +57,10 @@ mailbox #(tb_trans) gen2agt, agt2dvr, agt2scb, scb2agt, mon2scb ;
 //Virtual interface???? Probably.
 //ok i will write it then and basically copy it
 
-function new(tb_if globalinterface);
-
-//TODO: we need to plug the interface from wrapper 
-
-	this.localinterface = globalinterface;
+function new(/*Interface here*/);
 
 	//'this.' interface assignment here
+
 	//Mailboxs go here, 16 items max in each due to (4 input lines) * (4 outstanding commands per line)
 	//This might be wrong? I don't know, it's my best guess right now.
 	//Possible deadlock by doing this???? Probably not.
@@ -80,7 +69,7 @@ function new(tb_if globalinterface);
 	agt2dvr = new(16);
 	agt2scb = new(16);
 	scb2agt = new(16);
-	mon2scb = new(32); // i put a 32 bit limit here as all response are like max 32
+	mon2scb = new(); //I don't think this one needs a limit?
 
 
 	tcfg = new(); //Instanciate test config
@@ -94,13 +83,7 @@ function new(tb_if globalinterface);
 	//call new() function for all modules of the test bench
 
 	gen = new(gen2agt, tcfg.trans_cnt);
-	//this is the agent
 	agt = new(gen2agt, agt2dvr, agt2scb, scb2agt); //future implementation maybe
-	//already assigned the modport
-	dvr = new (localinterface, agt2dvr);
-
-	mon = new ();
-	scb = new ();
 
 	//TODO
 	//Driver
@@ -118,7 +101,7 @@ virtual task pre_test();
 endtask: pre_test
 
 virtual task test();
-	//TODO:DONE i think
+	//TODO
 	//reset the DUT through the Driver module	
 	dvr.reset(); 
 	fork

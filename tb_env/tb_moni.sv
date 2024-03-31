@@ -1,26 +1,14 @@
-//zexi si 40175054
+/*
+
+Monitor class for the testbench, watches the DUT outputs and passes the results up into the scoreboard/checker.
+Only needs to monitor the actual OUTPUTS of the DUT.
+
+Zachary Zazzara (40096894)
+zexi si (40175054)
+
+Created on: March 30th, 2024
+*/
 
 class moni;
-   
-    //TODO, monitor all activity
-    mailbox #(tb_trans) dvr2scb;
-    mailbox #(tb_trans) agt2scb;
-
-    //=============
-
-
-    //=============
-
-    function new(virtual tb_if.Master tb_master_if, mailbox #(tb_trans) dvr2scb, mailbox #(tb_trans) agt2scb);
-        this.tb_master_if = tb_master_if;
-        this.dvr2scb = dvr2scb;
-        this.agt2scb = agt2scb;
-
-    endfunction
-
-
-
-
-
-
-endmodule
+    //TODO
+endclass
