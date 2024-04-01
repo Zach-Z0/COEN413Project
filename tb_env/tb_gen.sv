@@ -36,7 +36,7 @@ function new(mailbox #(tb_trans) gen2agt, int max_trans_cnt);
 endfunction
 
 task main();
-    $display($time, ": Starting apb_gen for %0d transactions", max_trans_cnt);
+    $display($time, ": Starting tb_gen for %0d transactions", max_trans_cnt);
     //This while loop runs until the randomly generated number of tests completes
     while(!end_of_test())
         begin
