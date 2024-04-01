@@ -17,7 +17,7 @@ Created on: March 28th, 2024
 */
 
 `include "tb_env/tb_gen.sv"
-`include "apb_env/apb_trans.sv"
+`include "tb_env/tb_trans.sv"
 `include "tb_env/defs.sv" //Im not sure if I need this include
 //other includes? I'm not sure right now
 
