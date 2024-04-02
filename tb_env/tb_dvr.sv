@@ -5,6 +5,9 @@ them into low level commands for the input lines of the DUT.
 Also handles reset commands and passing through the clock.
 Needs to work closely with the interface.
 
+Possibly could have used threads here to split the driver up into 4 "lanes" so it can handle multiple transactions at once?
+Oh well...
+
 Zachary Zazzara (40096894)
 zexi si (40175054)
 
@@ -166,6 +169,12 @@ class driver
         //Do I need some sort of logic to tell the monitor to ignore outputs during this period? Maybe, but it 
         //most likely isn't declared here.
     endtask: reset
+
+    task wrap_up();
+        //TODO
+        //Put end of test stuff here
+        //Maybe add an event flag for when the test is over and stop main daemon when triggered & mailbox is empty
+    endtask: wrap_up
 
     //Other tasks here as needed (?) 
 endclass: driver

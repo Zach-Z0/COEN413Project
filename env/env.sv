@@ -96,6 +96,7 @@ virtual task pre_test();
 		//Missing: scoreboard, monitor
 		agt.main();
 		dvr.main();
+		mon.main()
 	join_none
 endtask: pre_test
 
@@ -115,9 +116,11 @@ virtual task post_test();
     	wait(gen.ended.triggered);
 		//Scoreboard ended trigger here, see wait statement above
 		agt.wrap_up();
+		dvr.wrap_up();
+		moni.wrap_up();
 		//put other wrap up tasks here as needed
-		//driver
-		//monitor/checker
+		//scoreboard/checker
+		//may wanna shuffle the order of these around later
 	join
 endtask: post_test
 

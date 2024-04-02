@@ -34,3 +34,8 @@ parameter TAG0 = 2'b00,
 		TAG1 = 2'b01,
 		TAG2 = 2'b10,
 		TAG3 = 2'b11;
+
+parameter GOOD =2'b01,
+		INVL = 2'b10,
+		ERR = 2'b11,
+		NORE = 2'b00;

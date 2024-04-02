@@ -14,7 +14,7 @@ Created on: March 29th, 2024
 
 `include "hdl/cal2_top.sv"
 
-module wrapper (tb_if interf);
+module wrapper (tb_if.Slave interf);
        //"INTERFACE NAME" -> "DUT INTERNAL NAME"
        //Legend: .DUT_wire_name(interface.interface_wire_name)
 
@@ -52,13 +52,15 @@ module wrapper (tb_if interf);
               .out_tag3(interf.ifTag3_out),
               .out_tag4(interf.ifTag4_out),
               //======================================= MISC
-              .scan_in(),
-              .scan_out(),
-              .a_clk(),
-              .b_clk()
+              .scan_in(/*Dummy signal*/),
+              .scan_out(/*Dummy signal*/),
+              .a_clk(/*Dummy signal*/),
+              .b_clk(/*Dummy signal*/)
        );
        //The "Misc" section is signals that aren't mentioned anywhere in the design specification but are present in calc2_top.sv
        //No idea what to do with these wire connections, the TA said connections can be made to these signals but to 
        //Concentrate on the signals specified in the design specification when generating inputs.
+       //Note: because of the slave modport speficiation, the MISC signals might not be visible right now to the wrapper
+       //Possibly will need to edit the modport specifications in tb_if.sv later.
 
 endmodule

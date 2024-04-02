@@ -23,7 +23,7 @@ of those, uncomment lines marked with (&&) these lines, I guess.
 
 class tb_trans;
 	rand req_cmd_t cmd;
-	rand req_data_t op1;
+	rand req_data_t op1; //Doubles as response holder when used by monitor!
 	rand req_data_t op2; //two datas for + and - ops, maybe apply constraints later?
 	rand req_port_t port; 
 	
@@ -39,13 +39,13 @@ class tb_trans;
 	
 //Functions
 function new();
-this.id = count++;
-endfunction:new
+	this.id = count++;
+endfunction: new
 
 function void display();
 //TODO
 //Don't know if I actually need this, might be useful for debugging later?
-endfunction :display
+endfunction: display
 
 function tb_trans copy(); //Deep copy function just in case we need it?
 	tb_trans deep_cp = new();
@@ -55,7 +55,7 @@ function tb_trans copy(); //Deep copy function just in case we need it?
 	deep_cp.tag = this.tag;
 	deep_cp.port = this.port;
 	copy = deep_cp;
-endfunction:copy
+endfunction: copy
 
 endclass
 
