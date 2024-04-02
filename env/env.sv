@@ -79,10 +79,10 @@ function new(virtual tb_if interf);
 
 	gen = new(gen2agt, tcfg.trans_cnt);
 	agt = new(gen2agt, agt2dvr, agt2scb, scb2agt);
-	dvr = new(interf, agt2dvr);
+	dvr = new(this.interf, agt2dvr);
+	mon = new(this.interf, mon2scb);
 
 	//TODO
-	//Monitor
 	//Scoreboard/checker
 endfunction: new
 
@@ -93,16 +93,16 @@ virtual task pre_test();
 		//TODO
 		//start scoreboard, driver, monitor, agent mains
 		//Wait untill classes are implemented to put anything else here
-		//Missing: scoreboard, monitor
+		//Missing: scoreboard
 		agt.main();
 		dvr.main();
-		mon.main()
+		mon.main();
 	join_none
 endtask: pre_test
 
 virtual task test();
 	dvr.reset(); 
-	//Tell monitor/scoreboard to ignore stuff here? Not sure yet.
+	//Don't THINK I need to tell the monitor/scoreboard to ignore anything here b/c transactions aren't going anywhere
 	fork
 		gen.main();
 		//TODO (?)

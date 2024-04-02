@@ -15,7 +15,7 @@ Created on: March 30th, 2024
 
 class moni;
     //Flag to trigger end of the test
-    event ended;
+    bit ended;
 
     //Transaction instance to hold the data just sent out from the DUT, one per port
     tb_trans tr1, tr2, tr3, tr4;
@@ -29,6 +29,7 @@ class moni;
     function new(virtual tb_if.Monitor tb_monitor_if, mailbox #(tb_trans) mon2scb);
         this.tb_monitor_if = tb_monitor_if;
         this.mon2scb = mon2scb;
+        ended = 0;
     endfunction: new
 
     task main(); //main daemon, starts 4 threads that monitor ports
@@ -44,7 +45,7 @@ class moni;
 
     task listenPort1();
         out_resp_t resp1;
-        do
+        do begin
             resp1 = tb_monitor_if.ifResp1_out;
             if(resp1 === NORE)
                 @(posedge tb_monitor_if.ifResp1_out); //Wait for something to happen on the port
@@ -60,12 +61,12 @@ class moni;
             
             //Send transaction object to the scoreboard/checker
             mon2scb.put(tr1);
-        while(!ended.triggered()) //Loop forever while end of test isn't flagged.
+        end while(!ended) //Loop forever while end of test isn't flagged.
     endtask: listenPort1
 
     task listenPort2(); //same as listenPort1
         out_resp_t resp2;
-        do
+        do begin
             resp2 = tb_monitor_if.ifResp2_out;
             if(resp2 === NORE)
                 @(posedge tb_monitor_if.ifResp2_out);
@@ -80,12 +81,12 @@ class moni;
             
             //Send transaction object to the scoreboard/checker
             mon2scb.put(tr2);
-        while(!ended.triggered())
+        end while(!ended)
     endtask: listenPort2
 
     task listenPort3(); //same as listenPort1
         out_resp_t resp3;
-        do
+        do begin
             resp3 = tb_monitor_if.ifResp3_out;
             if(resp3 === NORE)
                 @(posedge tb_monitor_if.ifResp3_out);
@@ -100,12 +101,12 @@ class moni;
             
             //Send transaction object to the scoreboard/checker
             mon2scb.put(tr3);
-        while(!ended.triggered())
+        end while(!ended)
     endtask: listenPort3
 
     task linstePort4(); //same as listenPort1
         out_resp_t resp4;
-        do
+        do begin
             resp4 = tb_monitor_if.ifResp4_out;
             if(resp4 === NORE)
                 @(posedge tb_monitor_if.ifResp4_out); 
@@ -120,10 +121,10 @@ class moni;
             
             //Send transaction object to the scoreboard/checker
             mon2scb.put(tr4);
-        while(!ended.triggered())
+        end while(!ended)
     endtask: listenPort4
 
     task wrap_up();
-        -> ended;
+        ended = 1;
     endtask: wrap_up
 endclass: moni

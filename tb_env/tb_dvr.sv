@@ -21,12 +21,16 @@ class driver
     //Interface object declaration
     virtual tb_if.Master tb_master_if;
 
+    //Flag to trigger end of the test
+    bit ended;
+
     //Mailbox
     mailbox #(tb_trans) agt2dvr;
 
     function new(virtual tb_if.Master tb_master_if, mailbox #(tb_trans) agt2dvr); 
         this.tb_master_if = tb_master_if;
         this.agt2dvr = agt2dvr;
+        ended = 0;
     endfunction: new
 
     task main();
@@ -137,6 +141,11 @@ class driver
             //Honestly I'm not sure if this is needed or not. Either it is, or it will cause timing issues.
             //Won't know until testing phase.
             @(this.tb_master_if);
+
+            if((ended == 1) && (agt2dvr.num() == 0)) begin
+                break; //If end of test flag as been set and the mailbox is empty, break from the forever loop
+                $display($time, ": Ending Driver Daemon.")
+            end
         end
     endtask: main
 
@@ -174,7 +183,6 @@ class driver
         //TODO
         //Put end of test stuff here
         //Maybe add an event flag for when the test is over and stop main daemon when triggered & mailbox is empty
+        ended = 1;
     endtask: wrap_up
-
-    //Other tasks here as needed (?) 
 endclass: driver
