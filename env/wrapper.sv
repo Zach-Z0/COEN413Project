@@ -58,6 +58,7 @@ module wrapper (tb_if interf);
               .b_clk()
        );
        //The "Misc" section is signals that aren't mentioned anywhere in the design specification but are present in calc2_top.sv
-       //No idea what to do with these wire connections, waiting for TA to respond to my email.
+       //No idea what to do with these wire connections, the TA said connections can be made to these signals but to 
+       //Concentrate on the signals specified in the design specification when generating inputs.
 
 endmodule
