@@ -90,7 +90,7 @@ class agt;
                     $display($time, ": Error with the agent tag assign case statement! Bad port data!");
             endcase
             agt2dvr.put(tr); //push the transaction to the driver mailbox
-            //TODO //push the transaction to the scoreboard mailbox
+            agt2scb.put(tr); //push the transaction to the scoreboard mailbox
         end
         $display($time, ": Ending tb_agt");
     endtask: main
@@ -125,6 +125,7 @@ class agt;
     endtask: releaseKey
 
     task wrap_up();
+        //TODO
         //Put end of test stuff here, if needed.
     endtask: wrap_up
 endclass: agt

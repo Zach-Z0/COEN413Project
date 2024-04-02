@@ -40,32 +40,26 @@ class env;
 test_cfg tcfg;
 
 //Instanciate transactors
-//TODO, this might be done?
 tb_gen gen;
 tb_agt agt;
 tb_moni mon;
 tb_dvr dvr;
 tb_scb scb;
 
-//Interface declaration goes here.
-//Virtual interface
-
 //Instanciate mailboxes here
-//Mailboxes: Generator -> Agent, Agent -> Driver(TODO), Monitor -> Scoreboard/Checker(TODO)
+//Mailboxes: Generator -> Agent, Agent -> Driver, Monitor -> Scoreboard/Checker (and back)
 mailbox #(tb_trans) gen2agt, agt2dvr, agt2scb, scb2agt, mon2scb ;
 
-//Interface declaration goes here, I think
-//Virtual interface???? Probably.
-//ok i will write it then and basically copy it
+//Interface declaration
+virtual tb_if interf;
 
-function new(/*Interface here*/);
+function new(virtual tb_if interf);
 
-	//'this.' interface assignment here
+	this.interf = interf;
 
 	//Mailboxs go here, 16 items max in each due to (4 input lines) * (4 outstanding commands per line)
 	//This might be wrong? I don't know, it's my best guess right now.
 	//Possible deadlock by doing this???? Probably not.
-	//TODO (?)
 	gen2agt = new(16);
 	agt2dvr = new(16);
 	agt2scb = new(16);
@@ -84,10 +78,10 @@ function new(/*Interface here*/);
 	//call new() function for all modules of the test bench
 
 	gen = new(gen2agt, tcfg.trans_cnt);
-	agt = new(gen2agt, agt2dvr, agt2scb, scb2agt); //future implementation maybe
+	agt = new(gen2agt, agt2dvr, agt2scb, scb2agt);
+	dvr = new(interf, agt2dvr);
 
 	//TODO
-	//Driver
 	//Monitor
 	//Scoreboard/checker
 endfunction: new
@@ -96,18 +90,21 @@ virtual task pre_test();
 	//TODO, refer to lab 4 env file
 	//Sync scoreboard max_trans_cnt with generator max_trans_cnt
 	fork
+		//TODO
 		//start scoreboard, driver, monitor, agent mains
+		//Wait untill classes are implemented to put anything else here
+		//Missing: scoreboard, monitor
 		agt.main();
+		dvr.main();
 	join_none
 endtask: pre_test
 
 virtual task test();
-	//TODO
-	//reset the DUT through the Driver module	
 	dvr.reset(); 
+	//Tell monitor/scoreboard to ignore stuff here? Not sure yet.
 	fork
 		gen.main();
-		//TODO
+		//TODO (?)
 	join_none
 endtask: test	
 
