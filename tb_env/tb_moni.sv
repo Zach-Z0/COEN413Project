@@ -13,7 +13,7 @@ Created on: March 30th, 2024
 `include "tb_env/devs.sv"
 //Other includes here as necessary
 
-class moni;
+class tb_moni;
     //Flag to trigger end of the test
     bit ended;
 
@@ -127,4 +127,4 @@ class moni;
     task wrap_up();
         ended = 1;
     endtask: wrap_up
-endclass: moni
+endclass: tb_moni

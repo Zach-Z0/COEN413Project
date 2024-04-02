@@ -36,28 +36,26 @@ class tb_trans;
 	constraint c_cmd {cmd inside {ADD, SUB, LSH, RSH, NOP};}
 	constraint c_port {port inside {1,2,3,4};}
 
-	
-//Functions
-function new();
-	this.id = count++;
-endfunction: new
+	//Functions
+	function new();
+		this.id = count++;
+	endfunction: new
 
-function void display();
-//TODO
-//Don't know if I actually need this, might be useful for debugging later?
-endfunction: display
+	function void display();
+	//TODO
+	//Don't know if I actually need this, might be useful for debugging later?
+	endfunction: display
 
-function tb_trans copy(); //Deep copy function just in case we need it?
-	tb_trans deep_cp = new();
-	deep_cp.cmd = this.cmd;
-	deep_cp.op1 = this.op1;
-	deep_cp.op2 = this.op2;
-	deep_cp.tag = this.tag;
-	deep_cp.port = this.port;
-	copy = deep_cp;
-endfunction: copy
-
-endclass
+	function tb_trans copy(); //Deep copy function just in case we need it?
+		tb_trans deep_cp = new();
+		deep_cp.cmd = this.cmd;
+		deep_cp.op1 = this.op1;
+		deep_cp.op2 = this.op2;
+		deep_cp.tag = this.tag;
+		deep_cp.port = this.port;
+		copy = deep_cp;
+	endfunction: copy
+endclass: tb_trans
 
 
 //&& `endif

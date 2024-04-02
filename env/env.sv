@@ -102,7 +102,7 @@ endtask: pre_test
 
 virtual task test();
 	dvr.reset(); 
-	//Don't THINK I need to tell the monitor/scoreboard to ignore anything here b/c transactions aren't going anywhere
+	//Don't THINK I need to tell the monitor/scoreboard to ignore anything here b/c transactions aren't going anywhere yet
 	fork
 		gen.main();
 		//TODO (?)

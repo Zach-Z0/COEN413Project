@@ -8,6 +8,6 @@ zexi si (40175054 )
 zachary zazzara (40096894)
 */
 
-class scb;
+class tb_scb;
     //TODO
-endclass
+endclass: tb_scb

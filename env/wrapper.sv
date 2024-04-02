@@ -63,4 +63,4 @@ module wrapper (tb_if.Slave interf);
        //Note: because of the slave modport speficiation, the MISC signals might not be visible right now to the wrapper
        //Possibly will need to edit the modport specifications in tb_if.sv later.
 
-endmodule
+endmodule: wrapper

@@ -24,4 +24,4 @@ module top;
     tb_if interf(clk); //Create interface
     test tb1(interf); //Create testbench
     wrapper wrap(interf.Slave); //Create wrapper and pass interface to it, which then creates DUT in wrapper module
-endmodule
+endmodule: top

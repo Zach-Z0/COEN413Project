@@ -17,7 +17,7 @@ Created on: March 29th, 2024
 `include "tb_env/tb_trans.sv"
 `include "tb_env/defs.sv"
 
-class driver
+class tb_dvr
     //Interface object declaration
     virtual tb_if.Master tb_master_if;
 
@@ -185,4 +185,4 @@ class driver
         //Maybe add an event flag for when the test is over and stop main daemon when triggered & mailbox is empty
         ended = 1;
     endtask: wrap_up
-endclass: driver
+endclass: tb_dvr

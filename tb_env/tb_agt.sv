@@ -21,7 +21,7 @@ Created on: March 28th, 2024
 `include "tb_env/defs.sv" //Im not sure if I need this include
 //other includes? I'm not sure right now
 
-class agt;
+class tb_agt;
     //Instanticate the mailboxes
     mailbox #(tb_trans) gen2agt, agt2dvr, agt2scb, scb2agt;
 
@@ -128,4 +128,4 @@ class agt;
         //TODO
         //Put end of test stuff here, if needed.
     endtask: wrap_up
-endclass: agt
+endclass: tb_agt
