@@ -32,6 +32,7 @@ class tb_scb;
 
     //Flag to trigger end of the test
     event ended;
+    bit endBit;
 
     //Test statistics
     //More than likely needs to be re-enforced with functional coverage bins and other stuff
@@ -58,14 +59,57 @@ class tb_scb;
         this.max_trans_cnt = max_trans_cnt;
         this.agt2scb = agt2scb;
         this.mon2scb = mon2scb;
+        endBit = 0;
     endfunction
 
-    task main();
-        //TODO
+    task main(); //main Scoreboard/checker daemon
+        //TODO (?)
+        fork
+            checkMailAgent();
+            checkMailMonitor()
+            validatePort1();
+            validatePort2();
+            validatePort3();
+            validatePort4();
+        join
+        $display($time, ": Scoreboard/Checker daemon stopping."); //Debug
     endtask: main
 
     task wrap_up();
-        //TODO
+        //TODO (?)
+        -> ended;
+        endBit = 1;
     endtask: wrap_up
     //Other tasks here as needed (?)
+
+    task checkMailAgent(); //Continuously watches mailboxes for incoming transactions and sorts them accordingly
+        //TODO
+
+        tb_trans agt_tr, mon_tr; //Hold incoming mail somewhere
+
+        do
+            agt2scb.get(agt_tr);
+            
+        while(!endBit)
+    endtask: checkMailAgent
+
+    task checkMailMonitor();
+        //TODO
+    endtask: checkMailMonitor
+
+    task validatePort1()
+        //TODO
+    endtask: validatePort1
+
+    task validatePort2();
+        //TODO
+    endtask: validatePort2
+
+    task validatePort3();
+        //TODO
+    endtask: validatePort3
+
+    task validatePort4();
+        //TODO
+    endtask: validatePort4
 endclass: tb_scb
