@@ -65,39 +65,55 @@ class tb_agt;
             Check which port the transaction wants, attempt to get it a key (secures it 1/4 of the tags)
             if able to grab a key, assign first available tag, tag queue SHOULD never be empty.
             If it's empty for some reason... timing issue? Scoreboard should be returning them before releasing the key.
-            How to return the key? Another mailbox that just says the keys are free now? Maybe. 
             */
             case(tr.port)
                 1: begin
-                    in1_sem.get(1); //DONT FORGET TO RETURN THE KEYS IN THE SCOREBOARD/CHECKER!!!!
+                    if(tr.cmd == NOP) begin //If the transaction is a NOP, do not lock a tag/key, just send it to driver
+                        $display($time, ": Port[%0b] current transaction is NOP, no tag assigned.", tr.port); //DEBUG
+                    end 
+                    else begin
+                    in1_sem.get(1);
                     tr.tag = in1_avl_tags.pop_front();
-                    $display($time, ": Assigning port %0b current transaction tag: %0b", tr.port, tr.tag); //DEBUG                    
+                    $display($time, ": Assigning port %0b current transaction tag: %0b", tr.port, tr.tag); //DEBUG
+                    end                    
                 end
                 2: begin
+                    if(tr.cmd == NOP) begin //If the transaction is a NOP, do not lock a tag/key, just send it to driver
+                        $display($time, ": Port[%0b] current transaction is NOP, no tag assigned.", tr.port); //DEBUG
+                    end
+                    else begin
                     in2_sem.get(1);
                     tr.tag = in2_avl_tags.pop_front();
                     $display($time, ": Assigning port %0b current transaction tag: %0b", tr.port, tr.tag); //DEBUG
+                    end
                 end
                 3: begin
+                    if(tr.cmd == NOP) begin //If the transaction is a NOP, do not lock a tag/key, just send it to driver
+                        $display($time, ": Port[%0b] current transaction is NOP, no tag assigned.", tr.port); //DEBUG
+                    end
+                    else begin
                     in3_sem.get(1);
                     tr.tag = in3_avl_tags.pop_front();
                     $display($time, ": Assigning port %0b current transaction tag: %0b", tr.port, tr.tag); //DEBUG
+                    end
                 end
                 4: begin
+                    if(tr.cmd == NOP) begin //If the transaction is a NOP, do not lock a tag/key, just send it to driver
+                        $display($time, ": Port[%0b] current transaction is NOP, no tag assigned.", tr.port); //DEBUG
+                    end 
+                    else begin
                     in4_sem.get(1);
                     tr.tag = in4_avl_tags.pop_front();
                     $display($time, ": Assigning port %0b current transaction tag: %0b", tr.port, tr.tag); //DEBUG
+                    end
                 end
                 default:
                     $display($time, ": Error with the agent tag assign case statement! Bad port data!");
             endcase
-            agt2dvr.put(tr); //push the transaction to the driver mailbox
-            //Note: This theoretically could maybe be replaced with 4 mailboxes, 1 per DUT port so that the Driver can
-            //pass up to 4 transactions (1 per port) to the DUT per clock cycle, but that would require gutting the driver
-            //class to be more like the monitor (forks) and that isn't really a priority currently.
-            //Note2: THIS IS A BAD IDEA, DON'T DO THIS. Leaving both notes here for now as a redundancy measure.
-            
-            agt2scb.put(tr); //push the transaction to the scoreboard mailbox
+            agt2dvr.put(tr); //push the transaction to the driver mailbox (regardless of if it's a NOP or not)
+
+            if(tr.cmd != NOP) //push the transaction to the scoreboard mailbox if its NOT a NOP
+                agt2scb.put(tr); 
 
             if((internalEnded == 1) && (gen2agt.num() == 0))
                 break;
