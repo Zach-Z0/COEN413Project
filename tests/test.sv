@@ -19,7 +19,7 @@ program automatic test(tb_if interf)
     env mainEnv;
 
     initial begin
-        mainenv = new(interf);
+        mainEnv = new(interf);
 
         //start the tests
         mainEnv.run();
