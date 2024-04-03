@@ -180,9 +180,6 @@ class tb_dvr
     endtask: reset
 
     task wrap_up();
-        //TODO
-        //Put end of test stuff here
-        //Maybe add an event flag for when the test is over and stop main daemon when triggered & mailbox is empty
         ended = 1;
     endtask: wrap_up
 endclass: tb_dvr
