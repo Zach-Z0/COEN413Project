@@ -90,6 +90,9 @@ class tb_agt;
                     $display($time, ": Error with the agent tag assign case statement! Bad port data!");
             endcase
             agt2dvr.put(tr); //push the transaction to the driver mailbox
+            //Note: This theoretically could maybe be replaced with 4 mailboxes, 1 per DUT port so that the Driver can
+            //pass up to 4 transactions (1 per port) to the DUT per clock cycle, but that would require gutting the driver
+            //class to be more like the monitor (forks) and that isn't really a priority currently.
             agt2scb.put(tr); //push the transaction to the scoreboard mailbox
         end
         $display($time, ": Ending tb_agt");
