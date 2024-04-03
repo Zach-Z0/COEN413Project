@@ -61,7 +61,7 @@ class tb_moni;
             
             //Send transaction object to the scoreboard/checker
             mon2scb.put(tr1);
-        end while(!ended) //Loop forever while end of test isn't flagged.
+        end while(!ended); //Loop forever while end of test isn't flagged.
     endtask: listenPort1
 
     task listenPort2(); //same as listenPort1
@@ -81,7 +81,7 @@ class tb_moni;
             
             //Send transaction object to the scoreboard/checker
             mon2scb.put(tr2);
-        end while(!ended)
+        end while(!ended);
     endtask: listenPort2
 
     task listenPort3(); //same as listenPort1
@@ -101,7 +101,7 @@ class tb_moni;
             
             //Send transaction object to the scoreboard/checker
             mon2scb.put(tr3);
-        end while(!ended)
+        end while(!ended);
     endtask: listenPort3
 
     task linstePort4(); //same as listenPort1
@@ -121,7 +121,7 @@ class tb_moni;
             
             //Send transaction object to the scoreboard/checker
             mon2scb.put(tr4);
-        end while(!ended)
+        end while(!ended);
     endtask: listenPort4
 
     task wrap_up();

@@ -49,7 +49,7 @@ class tb_scb;
     tb_trans monQue3 [$];
     tb_trans monQue4 [$];
 
-    //Create the associatve arrays, index is the TAG as defined in "defs.sv"
+    //Create the associatve arrays, index is the TAG as defined in "defs.sv", sorted by PORT (1,2,3,4)
     tb_trans agtArr1 [req_tag_t];
     tb_trans agtArr2 [req_tag_t];
     tb_trans agtArr3 [req_tag_t];
@@ -83,18 +83,30 @@ class tb_scb;
     //Other tasks here as needed (?)
 
     task checkMailAgent(); //Continuously watches mailboxes for incoming transactions and sorts them accordingly
-        //TODO
-
-        tb_trans agt_tr, mon_tr; //Hold incoming mail somewhere
-
+        tb_trans agt_tr; //Hold incoming mail somewhere
         do
-            agt2scb.get(agt_tr);
-            
-        while(!endBit)
+            agt2scb.get(agt_tr); //Wait for incoming mail
+            case(agt_tr.port)
+                //Move a copy of the transaction into the apropriate array
+                //Note: Items indexed by their TAG
+                1: agtArr1[agt_tr.tag] = agt_tr.copy(); 
+                2: agtArr2[agt_tr.tag] = agt_tr.copy();
+                3: agtArr3[agt_tr.tag] = agt_tr.copy();
+                4: agtArr4[agt_tr.tag] = agt_tr.copy();
+            endcase
+        while(!endBit);
     endtask: checkMailAgent
 
     task checkMailMonitor();
-        //TODO
+        tb_trans mon_tr;
+        do
+            case()
+                1: monQue1.push_back(mon_tr.copy());
+                2: monQue2.push_back(mon_tr.copy());
+                3: monQue3.push_back(mon_tr.copy());
+                4: monQue4.push_back(mon_tr.copy())  ;          
+            endcase
+        while(!endBit);
     endtask: checkMailMonitor
 
     task validatePort1()
