@@ -23,7 +23,7 @@ of those, uncomment lines marked with (&&) these lines, I guess.
 
 class tb_trans;
 	rand req_cmd_t cmd;
-	rand req_data_t op1;
+	rand req_data_t op1; //Doubles as response holder when used by monitor!
 	rand req_data_t op2; //two datas for + and - ops, maybe apply constraints later?
 	rand req_port_t port; 
 	
@@ -36,28 +36,26 @@ class tb_trans;
 	constraint c_cmd {cmd inside {ADD, SUB, LSH, RSH, NOP};}
 	constraint c_port {port inside {1,2,3,4};}
 
-	
-//Functions
-function new();
-this.id = count++;
-endfunction:new
+	//Functions
+	function new();
+		this.id = count++;
+	endfunction: new
 
-function void display();
-//TODO
-//Don't know if I actually need this, might be useful for debugging later?
-endfunction :display
+	function void display();
+	//TODO
+	//Don't know if I actually need this, might be useful for debugging later?
+	endfunction: display
 
-function tb_trans copy(); //Deep copy function just in case we need it?
-	tb_trans deep_cp = new();
-	deep_cp.cmd = this.cmd;
-	deep_cp.op1 = this.op1;
-	deep_cp.op2 = this.op2;
-	deep_cp.tag = this.tag;
-	deep_cp.port = this.port;
-	copy = deep_cp;
-endfunction:copy
-
-endclass
+	function tb_trans copy(); //Deep copy function just in case we need it?
+		tb_trans deep_cp = new();
+		deep_cp.cmd = this.cmd;
+		deep_cp.op1 = this.op1;
+		deep_cp.op2 = this.op2;
+		deep_cp.tag = this.tag;
+		deep_cp.port = this.port;
+		copy = deep_cp;
+	endfunction: copy
+endclass: tb_trans
 
 
 //&& `endif

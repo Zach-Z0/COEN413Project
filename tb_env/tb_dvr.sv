@@ -5,6 +5,9 @@ them into low level commands for the input lines of the DUT.
 Also handles reset commands and passing through the clock.
 Needs to work closely with the interface.
 
+Possibly could have used threads here to split the driver up into 4 "lanes" so it can handle multiple transactions at once?
+Oh well...
+
 Zachary Zazzara (40096894)
 zexi si (40175054)
 
@@ -14,9 +17,12 @@ Created on: March 29th, 2024
 `include "tb_env/tb_trans.sv"
 `include "tb_env/defs.sv"
 
-class driver
+class tb_dvr
     //Interface object declaration
     virtual tb_if.Master tb_master_if;
+
+    //Flag to trigger end of the test
+    bit ended;
 
     //Mailbox
     mailbox #(tb_trans) agt2dvr;
@@ -24,6 +30,7 @@ class driver
     function new(virtual tb_if.Master tb_master_if, mailbox #(tb_trans) agt2dvr); 
         this.tb_master_if = tb_master_if;
         this.agt2dvr = agt2dvr;
+        ended = 0;
     endfunction: new
 
     task main();
@@ -134,6 +141,11 @@ class driver
             //Honestly I'm not sure if this is needed or not. Either it is, or it will cause timing issues.
             //Won't know until testing phase.
             @(this.tb_master_if);
+
+            if((ended == 1) && (agt2dvr.num() == 0)) begin
+                break; //If end of test flag as been set and the mailbox is empty, break from the forever loop
+                $display($time, ": Ending Driver Daemon.")
+            end
         end
     endtask: main
 
@@ -167,5 +179,7 @@ class driver
         //most likely isn't declared here.
     endtask: reset
 
-    //Other tasks here as needed (?) 
-endclass: driver
+    task wrap_up();
+        ended = 1;
+    endtask: wrap_up
+endclass: tb_dvr

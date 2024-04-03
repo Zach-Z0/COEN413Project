@@ -21,7 +21,7 @@ Created on: March 28th, 2024
 `include "tb_env/defs.sv" //Im not sure if I need this include
 //other includes? I'm not sure right now
 
-class agt;
+class tb_agt;
     //Instanticate the mailboxes
     mailbox #(tb_trans) gen2agt, agt2dvr, agt2scb, scb2agt;
 
@@ -90,7 +90,12 @@ class agt;
                     $display($time, ": Error with the agent tag assign case statement! Bad port data!");
             endcase
             agt2dvr.put(tr); //push the transaction to the driver mailbox
-            //TODO //push the transaction to the scoreboard mailbox
+            //Note: This theoretically could maybe be replaced with 4 mailboxes, 1 per DUT port so that the Driver can
+            //pass up to 4 transactions (1 per port) to the DUT per clock cycle, but that would require gutting the driver
+            //class to be more like the monitor (forks) and that isn't really a priority currently.
+            //Note2: THIS IS A BAD IDEA, DON'T DO THIS. Leaving both notes here for now as a redundancy measure.
+            
+            agt2scb.put(tr); //push the transaction to the scoreboard mailbox
         end
         $display($time, ": Ending tb_agt");
     endtask: main
@@ -125,6 +130,7 @@ class agt;
     endtask: releaseKey
 
     task wrap_up();
+        //TODO
         //Put end of test stuff here, if needed.
     endtask: wrap_up
-endclass: agt
+endclass: tb_agt

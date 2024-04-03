@@ -76,4 +76,4 @@ virtual function tr_trans get_transaction();
     return rand_tr.copy();
 endfunction
 
-endclass
+endclass: tb_gen
