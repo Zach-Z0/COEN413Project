@@ -70,8 +70,7 @@ class env;
 		tcfg = new(); //Instanciate test config
 
 		//Copy pasted from lab 4, just seems good to have in case.
-		if (!tcfg.randomize()) 
-			begin
+		if (!tcfg.randomize()) begin
 				$display("test_cfg::randomize failed");
 				$finish;
 			end
@@ -86,16 +85,13 @@ class env;
 	endfunction: new
 
 	virtual task pre_test();
-		//TODO, refer to lab 4 env file
 		//Sync scoreboard max_trans_cnt with generator max_trans_cnt
 		fork
-			//TODO
 			//start scoreboard, driver, monitor, agent mains
-			//Wait untill classes are implemented to put anything else here
-			//Missing: scoreboard
 			agt.main();
 			dvr.main();
 			mon.main();
+			scb.main()
 		join_none
 	endtask: pre_test
 
@@ -104,22 +100,20 @@ class env;
 		//Don't THINK I need to tell the monitor/scoreboard to ignore anything here b/c transactions aren't going anywhere yet
 		fork
 			gen.main();
-			//TODO (?)
 		join_none
 	endtask: test	
 
 	//Clean up function post running tests, waiting for everything to finish
 	virtual task post_test();
-		//TODO
 		fork
 			wait(gen.ended.triggered());
-			wait(scb.ended.triggered()); //This MAY get changed or supplemented later depending on how wrap_up is implemented
-			agt.wrap_up();
-			dvr.wrap_up();
-			mon.wrap_up();
-			//put other wrap up tasks here as needed
+			wait(scb.ended.triggered()); 
 			//may wanna shuffle the order of these around later
 		join
+		//After generator and scoreboard are done, wrap up the rest of the daemons.
+		agt.wrap_up();
+		dvr.wrap_up();
+		mon.wrap_up();
 	endtask: post_test
 
 	task run();

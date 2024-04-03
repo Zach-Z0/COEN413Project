@@ -28,6 +28,8 @@ class tb_agt;
     //Instanciate somewhere to hold a transaction object
     tb_trans tr, trRtrn;
 
+    //End of program flag
+    bit internalEnded;
 
     //Semaphores for keeping track of how many pending transactions have been sent to the DUT
     //Needs to be accessible from the scoreboard, i'm pretty sure.
@@ -44,7 +46,7 @@ class tb_agt;
         this.agt2dvr = agt2dvr;
         this.agt2scb = agt2scb;
         this.scb2agt = scb2agt; //This is purely for returning semaphores and keys.
-        //might need more here later?
+        internalEnded = 0;
     endfunction
 
     task main();
@@ -96,8 +98,11 @@ class tb_agt;
             //Note2: THIS IS A BAD IDEA, DON'T DO THIS. Leaving both notes here for now as a redundancy measure.
             
             agt2scb.put(tr); //push the transaction to the scoreboard mailbox
+
+            if((internalEnded == 1) && (gen2agt.num() == 0))
+                break;
         end
-        $display($time, ": Ending tb_agt");
+        $display($time, ": Ending tb_agt daemon");
     endtask: main
 
     //Checks to see if any keys have been returned by the scoreboard/checker, returns them and releases semaphores
@@ -130,7 +135,6 @@ class tb_agt;
     endtask: releaseKey
 
     task wrap_up();
-        //TODO
-        //Put end of test stuff here, if needed.
+        internalEnded = 1;
     endtask: wrap_up
 endclass: tb_agt

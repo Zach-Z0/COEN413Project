@@ -48,6 +48,8 @@ class tb_trans;
 
 	function tb_trans copy(); //Deep copy function just in case we need it?
 		tb_trans deep_cp = new();
+		count--; //Don't skew the IDs by making copies
+		deep_cp.id = this.id;
 		deep_cp.cmd = this.cmd;
 		deep_cp.op1 = this.op1;
 		deep_cp.op2 = this.op2;
