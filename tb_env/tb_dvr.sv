@@ -143,8 +143,8 @@ class tb_dvr
             @(this.tb_master_if);
 
             if((ended == 1) && (agt2dvr.num() == 0)) begin
-                break; //If end of test flag as been set and the mailbox is empty, break from the forever loop
                 $display($time, ": Ending Driver Daemon.")
+                break; //If end of test flag as been set and the mailbox is empty, break from the forever loop
             end
         end
     endtask: main

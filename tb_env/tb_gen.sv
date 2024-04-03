@@ -45,7 +45,8 @@ task main();
             //wait & get transaction
             temp_tr = get_transaction();
 
-            ++trans_cnt;
+            if(temp_tr.cmd != NOP)
+                ++trans_cnt;
 
             gen2agt.put(temp_tr)
         end //end of while loop

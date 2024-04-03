@@ -12,7 +12,7 @@ parameter REQ_CMD_WIDTH = 4;
 typedef bit [REQ_CMD_WIDTH-1:0] req_cmd_t;
 
 parameter REQ_DATA_WIDTH = 32;
-typedef bit [REQ_DATA_WIDTH-1:0] req_data_t;
+typedef bit signed [REQ_DATA_WIDTH-1:0] req_data_t;
 
 parameter REQ_TAG_WIDTH = 2;
 typedef bit [REQ_TAG_WIDTH-1:0] req_tag_t;

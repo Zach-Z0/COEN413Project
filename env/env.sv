@@ -113,7 +113,7 @@ class env;
 		//TODO
 		fork
 			wait(gen.ended.triggered());
-			wait(scb.ended.triggered()); //This MAY get changed or supplemented later depending on how wrap_up is implemented
+			wait(scb.ended.triggered()); 
 			agt.wrap_up();
 			dvr.wrap_up();
 			mon.wrap_up();
