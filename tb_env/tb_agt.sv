@@ -102,7 +102,7 @@ class tb_agt;
             if((internalEnded == 1) && (gen2agt.num() == 0))
                 break;
         end
-        $display($time, ": Ending tb_agt daemon");
+        $display($time, ": Ending agent daemon");
     endtask: main
 
     //Checks to see if any keys have been returned by the scoreboard/checker, returns them and releases semaphores

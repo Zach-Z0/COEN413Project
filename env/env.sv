@@ -107,13 +107,12 @@ class env;
 	virtual task post_test();
 		fork
 			wait(gen.ended.triggered());
-			wait(scb.ended.triggered()); 
+			wait(scb.ended.triggered());
+			agt.wrap_up();
+			dvr.wrap_up();
+			mon.wrap_up(); 
 			//may wanna shuffle the order of these around later
 		join
-		//After generator and scoreboard are done, wrap up the rest of the daemons.
-		agt.wrap_up();
-		dvr.wrap_up();
-		mon.wrap_up();
 	endtask: post_test
 
 	task run();
