@@ -93,6 +93,8 @@ class tb_agt;
             //Note: This theoretically could maybe be replaced with 4 mailboxes, 1 per DUT port so that the Driver can
             //pass up to 4 transactions (1 per port) to the DUT per clock cycle, but that would require gutting the driver
             //class to be more like the monitor (forks) and that isn't really a priority currently.
+            //Note2: THIS IS A BAD IDEA, DON'T DO THIS. Leaving both notes here for now as a redundancy measure.
+            
             agt2scb.put(tr); //push the transaction to the scoreboard mailbox
         end
         $display($time, ": Ending tb_agt");
