@@ -56,9 +56,9 @@ class tb_dvr
                 1: begin
                     case(tr.cmd)
                         NOP: begin
-                            tb_master_if.req1_cmd_in <= tr.cmd;
+                            tb_master_if.req1_cmd_in <= NOP;
                             tb_master_if.req1_data_in <= 0;
-                            tb_master_if.req1_tag_in <= tr.tag; //May need to change this depending on answer from TA.
+                            tb_master_if.req1_tag_in <= 0; //NOP does not need a tag, defaulting to 0.
                         end
                         ADD, SUB, LSH, RSH: begin
                             tb_master_if.req1_cmd_in <= tr.cmd;
@@ -76,9 +76,9 @@ class tb_dvr
                 2: begin
                     case(tr.cmd)
                         NOP: begin
-                           tb_master_if.req2_cmd_in <= tr.cmd;
+                           tb_master_if.req2_cmd_in <= NOP;
                            tb_master_if.req2_data_in <= 0;
-                           tb_master_if.req2_tag_in <= tr.tag; //May need to change this depending on answer from TA.
+                           tb_master_if.req2_tag_in <= 0;
                         end
                         ADD, SUB, LSH, RSH: begin
                             tb_master_if.req2_cmd_in <= tr.cmd;
@@ -96,9 +96,9 @@ class tb_dvr
                 3: begin
                     case(tr.cmd)
                         NOP: begin
-                           tb_master_if.req3_cmd_in <= tr.cmd;
+                           tb_master_if.req3_cmd_in <= NOP;
                            tb_master_if.req3_data_in <= 0;
-                           tb_master_if.req3_tag_in <= tr.tag; //May need to change this depending on answer from TA.
+                           tb_master_if.req3_tag_in <= 0;
                         end 
                         ADD, SUB, LSH, RSH: begin
                             tb_master_if.req3_cmd_in <= tr.cmd;
@@ -116,9 +116,9 @@ class tb_dvr
                 4: begin
                     case(tr.cmd)
                         NOP: begin
-                           tb_master_if.req4_cmd_in <= tr.cmd;
+                           tb_master_if.req4_cmd_in <= NOP;
                            tb_master_if.req4_data_in <= 0;
-                           tb_master_if.req4_tag_in <= tr.tag; //May need to change this depending on answer from TA.
+                           tb_master_if.req4_tag_in <= 0;
                         end
                         ADD, SUB, LSH, RSH: begin
                             tb_master_if.req4_cmd_in <= tr.cmd;
@@ -142,11 +142,10 @@ class tb_dvr
             //Won't know until testing phase.
             @(this.tb_master_if);
 
-            if((ended == 1) && (agt2dvr.num() == 0)) begin
-                $display($time, ": Ending Driver Daemon.")
+            if((ended == 1) && (agt2dvr.num() == 0)) 
                 break; //If end of test flag as been set and the mailbox is empty, break from the forever loop
-            end
         end
+        $display($time, ": Ending Driver Daemon.")
     endtask: main
 
     task reset();
