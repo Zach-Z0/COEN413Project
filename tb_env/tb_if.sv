@@ -11,6 +11,9 @@ zexi si (40175054)
 Created on: March 29th, 2024
 */
 
+//`ifndef TB_IF_DEFINE
+//`define TB_IF_DEFINE
+
 `include "tb_env/defs.sv"
 
 interface tb_if(input ifClk); //clock will come frop TB top module, which doesn't exist yet
@@ -107,3 +110,5 @@ interface tb_if(input ifClk); //clock will come frop TB top module, which doesn'
         output ifTag4_out
     );
 endinterface
+
+//`endif

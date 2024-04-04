@@ -22,7 +22,7 @@ zachary zazzara (40096894)
 */
 
 `include "tb_env/tb_trans.sv"
-`include "tb_env/defs.sv"
+//`include "tb_env/defs.sv"
 
 class tb_scb;
     //Max # of transactions set in "test_cfg" class in "env.sv" file, passed here.
@@ -63,7 +63,7 @@ class tb_scb;
     task main(); //main Scoreboard/checker daemon
         fork
             checkMailAgent();
-            checkMailMonitor()
+            checkMailMonitor();
             validatePort1();
             validatePort2();
             validatePort3();
@@ -135,10 +135,10 @@ class tb_scb;
                         //compare the two transactions to see if there's an error or not
                         case(p1_agt.cmd) //First sort by what operation type needs to be checked
                             NOP: $display($time, ": Error with the scb/checker validatePort1 case statement! Recieved a NOP!");
-                            ADD: checkAdd();
-                            SUB: checkSub();
-                            LSH: checkLShift();
-                            RSH: checkRShift();
+                            ADD: checkAdd(p1_agt, p1_mon);
+                            SUB: checkSub(p1_agt, p1_mon);
+                            LSH: checkLShift(p1_agt, p1_mon);
+                            RSH: checkRShift(p1_agt, p1_mon);
                             default:
                                 $display($time, ": Error with the scb/checker validatePort1 case statement! Bad command data!"); 
                         endcase
@@ -175,10 +175,10 @@ class tb_scb;
                         //compare the two transactions to see if there's an error or not
                         case(p2_agt.cmd) //First sort by what operation type needs to be checked
                             NOP: $display($time, ": Error with the scb/checker validatePort2 case statement! Recieved a NOP!");
-                            ADD: checkAdd();
-                            SUB: checkSub();
-                            LSH: checkLShift();
-                            RSH: checkRShift();
+                            ADD: checkAdd(p2_agt, p2_mon);
+                            SUB: checkSub(p2_agt, p2_mon);
+                            LSH: checkLShift(p2_agt, p2_mon);
+                            RSH: checkRShift(p2_agt, p2_mon);
                             default:
                                 $display($time, ": Error with the scb/checker validatePort2 case statement! Bad command data!"); 
                         endcase
@@ -215,10 +215,10 @@ class tb_scb;
                         //compare the two transactions to see if there's an error or not
                         case(p3_agt.cmd) //First sort by what operation type needs to be checked
                             NOP: $display($time, ": Error with the scb/checker validatePort3 case statement! Recieved a NOP!");
-                            ADD: checkAdd();
-                            SUB: checkSub();
-                            LSH: checkLShift();
-                            RSH: checkRShift();
+                            ADD: checkAdd(p3_agt, p3_mon);
+                            SUB: checkSub(p3_agt, p3_mon);
+                            LSH: checkLShift(p3_agt, p3_mon);
+                            RSH: checkRShift(p3_agt, p3_mon);
                             default:
                                 $display($time, ": Error with the scb/checker validatePort3 case statement! Bad command data!"); 
                         endcase
@@ -255,10 +255,10 @@ class tb_scb;
                         //compare the two transactions to see if there's an error or not
                         case(p4_agt.cmd) //First sort by what operation type needs to be checked
                             NOP: $display($time, ": Error with the scb/checker validatePort4 case statement! Recieved a NOP!");
-                            ADD: checkAdd();
-                            SUB: checkSub();
-                            LSH: checkLShift();
-                            RSH: checkRShift();
+                            ADD: checkAdd(p4_agt, p4_mon);
+                            SUB: checkSub(p4_agt, p4_mon);
+                            LSH: checkLShift(p4_agt, p4_mon);
+                            RSH: checkRShift(p4_agt, p4_mon);
                             default:
                                 $display($time, ": Error with the scb/checker validatePort4 case statement! Bad command data!"); 
                         endcase
@@ -291,7 +291,7 @@ class tb_scb;
                     $display($time, ": Successful addition result validation! Results: Agent: %0d and Monitor: %0d match!", scbResult, monResult);
                 end
                 else begin
-                    failedTests++
+                    failedTests++;
                     $display($time, ": Failed addition result verification! Results: Agent: %0d and Monitor: %0d do not match!", scbResult, monResult);
                 end
             end
@@ -316,7 +316,7 @@ class tb_scb;
                     $display($time, ": Successful subtraction result validation! Results: Agent: %0d and Monitor: %0d match!", scbResult, monResult);
                 end
                 else begin
-                    failedTests++
+                    failedTests++;
                     $display($time, ": Failed subtraction result verification! Results: Agent: %0d and Monitor: %0d do not match!", scbResult, monResult);
                 end
             end
@@ -341,7 +341,7 @@ class tb_scb;
                     $display($time, ": Successful left shift result validation! Results: Agent: %0d and Monitor: %0d match!", scbResult, monResult);
                 end
                 else begin
-                    failedTests++
+                    failedTests++;
                     $display($time, ": Failed left shift result verification! Results: Agent: %0d and Monitor: %0d do not match!", scbResult, monResult);
                 end
             end
@@ -366,7 +366,7 @@ class tb_scb;
                     $display($time, ": Successful rightshift result validation! Results: Agent: %0d and Monitor: %0d match!", scbResult, monResult);
                 end
                 else begin
-                    failedTests++
+                    failedTests++;
                     $display($time, ": Failed right shift result verification! Results: Agent: %0d and Monitor: %0d do not match!", scbResult, monResult);
                 end
             end
@@ -393,7 +393,7 @@ class tb_scb;
                     $display($time, ": Successful left shift result validation! Results: Agent: %0d and Monitor: %0d match!", scbResult, monResult);
                 end
                 else begin
-                    failedTests++
+                    failedTests++;
                     $display($time, ": Failed left shift result verification! Results: Agent: %0d and Monitor: %0d do not match!", scbResult, monResult);
                 end
             end

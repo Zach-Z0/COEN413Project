@@ -8,6 +8,9 @@ Created on: March 27th, 2024
 
 */
 
+//`ifndef TB_IF_DEFINE
+//`define TB_IF_DEFINE
+
 parameter REQ_CMD_WIDTH = 4;
 typedef bit [REQ_CMD_WIDTH-1:0] req_cmd_t;
 
@@ -39,3 +42,5 @@ parameter GOOD =2'b01,
 		INVL = 2'b10,
 		ERR = 2'b11,
 		NORE = 2'b00;
+
+//`endif

@@ -11,7 +11,7 @@ ze xi si (40175054)
 Created on: March 29th, 2024
 */
 
-program automatic test(tb_if interf)
+program automatic test(tb_if interf);
 
     `include "env/env.sv"
 

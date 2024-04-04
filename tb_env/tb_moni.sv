@@ -10,8 +10,7 @@ Created on: March 30th, 2024
 */
 
 `include "tb_env/tb_trans.sv"
-`include "tb_env/devs.sv"
-//Other includes here as necessary
+//`include "tb_env/defs.sv"
 
 class tb_moni;
     //Flag to trigger end of the test
@@ -104,7 +103,7 @@ class tb_moni;
         end while(!ended);
     endtask: listenPort3
 
-    task linstePort4(); //same as listenPort1
+    task listenPort4(); //same as listenPort1
         out_resp_t resp4;
         do begin
             resp4 = tb_monitor_if.ifResp4_out;

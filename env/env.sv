@@ -13,15 +13,17 @@ Created on: March 28th, 2024
 
 */
 
-`include "tb_env/tb_trans.sv"
+//`ifndef TB_IF_DEFINE
+//`define TB_IF_DEFINE
+
+//`include "tb_env/tb_trans.sv"
 `include "tb_env/tb_gen.sv"
 `include "tb_env/tb_agt.sv"
 `include "tb_env/tb_dvr.sv"
 `include "tb_env/tb_moni.sv"
-`include "tb_env/tb_if.sv"
+//`include "tb_env/tb_if.sv"
 `include "env/scoreboard.sv"
 
-//TODO
 //Will need more includes here as we write more classes
 
 class test_cfg; //Configuration class
@@ -91,7 +93,7 @@ class env;
 			agt.main();
 			dvr.main();
 			mon.main();
-			scb.main()
+			scb.main();
 		join_none
 	endtask: pre_test
 
@@ -121,3 +123,5 @@ class env;
 		post_test();
 	endtask: run
 endclass: env
+
+//`endif

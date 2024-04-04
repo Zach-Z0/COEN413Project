@@ -12,7 +12,7 @@ ze xi si (40175054)
 Created on: March 29th, 2024
 */
 
-`include "hdl/cal2_top.sv"
+//`include "hdl/calc2_top.v"
 
 module wrapper (tb_if.Slave interf);
        //"INTERFACE NAME" -> "DUT INTERNAL NAME"

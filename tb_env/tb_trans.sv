@@ -16,8 +16,8 @@ Seems to be related to the interface and prevents a compiler issue
 related to "multiple declaration" errors. So if you ever see any
 of those, uncomment lines marked with (&&) these lines, I guess.
 */
-//&& `ifndef 
-//&& `define 
+`ifndef TB_IF_DEFINE
+`define TB_IF_DEFINE
 
 `include "tb_env/defs.sv"
 
@@ -30,7 +30,7 @@ class tb_trans;
 	req_tag_t tag; //transaction tag to be assigned by the agent
 	
 	static int count = 0; //Counts the total number of transaction objects generatated so far
-	int id; //transaction ID of current transaction object/instance
+	int id, trans_cnt; //transaction ID of current transaction object/instance
 
 	//Need contstrains for these randoms
 	constraint c_cmd {cmd inside {ADD, SUB, LSH, RSH, NOP};}
@@ -60,4 +60,4 @@ class tb_trans;
 endclass: tb_trans
 
 
-//&& `endif
+`endif

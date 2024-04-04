@@ -15,9 +15,9 @@ Created on: March 29th, 2024
 */
 
 `include "tb_env/tb_trans.sv"
-`include "tb_env/defs.sv"
+//`include "tb_env/defs.sv"
 
-class tb_dvr
+class tb_dvr;
     //Interface object declaration
     virtual tb_if.Master tb_master_if;
 
@@ -145,7 +145,7 @@ class tb_dvr
             if((ended == 1) && (agt2dvr.num() == 0)) 
                 break; //If end of test flag as been set and the mailbox is empty, break from the forever loop
         end
-        $display($time, ": Ending Driver Daemon.")
+        $display($time, ": Ending Driver Daemon.");
     endtask: main
 
     task reset();

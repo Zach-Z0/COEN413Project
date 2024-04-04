@@ -8,7 +8,11 @@ Created on: March 28th, 2024
 
 */
 
+//`ifndef TB_IF_DEFINE
+//`define TB_IF_DEFINE
+
 `include "tb_env/tb_trans.sv"
+//`include "tb_env/defs.sv"
 
 class tb_gen;
 
@@ -26,7 +30,7 @@ int trans_cnt = 0;
 event ended;
 
 //transaction mailbox for generator -> agent
-mailbox #(tb_trans) gen2agt
+mailbox #(tb_trans) gen2agt;
 
 //Constructor
 function new(mailbox #(tb_trans) gen2agt, int max_trans_cnt);
@@ -48,13 +52,13 @@ task main();
             if(temp_tr.cmd != NOP)
                 ++trans_cnt;
 
-            gen2agt.put(temp_tr)
+            gen2agt.put(temp_tr);
         end //end of while loop
     $display($time, ": Ending tb_gen\n");
 
     //Set the ended event flag to say the generator is finished
     ->ended; 
-endtask
+endtask: main
 
 //Function checks to see how many more transaction objects need to be generated before the test is complete
 //Same as in lab 4
@@ -67,7 +71,7 @@ endfunction
 
 //Returns a transaction object associated with tr member
 //Same as in lab 4
-virtual function tr_trans get_transaction();
+virtual function tb_trans get_transaction();
     rand_tr.trans_cnt = trans_cnt;
     if (! this.rand_tr.randomize())
       begin
@@ -78,3 +82,5 @@ virtual function tr_trans get_transaction();
 endfunction
 
 endclass: tb_gen
+
+//`endif

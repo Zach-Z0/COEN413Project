@@ -11,8 +11,8 @@ I think this is done?
 Created on: March 29th, 2024
 */
 
-`include "env/wrapper.sv" //This might cause compiler errors, leaving it here for now
-`include "tb_env/tb_if.sv"
+//`include "env/wrapper.sv" //This might cause compiler errors, leaving it here for now
+//`include "tb_env/tb_if.sv"
 
 module top;
     parameter SIM_CYCLE = 100;
