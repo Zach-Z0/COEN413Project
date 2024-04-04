@@ -56,7 +56,7 @@ class tb_dvr
                 1: begin
                     case(tr.cmd)
                         NOP: begin
-                            tb_master_if.req1_cmd_in <= tr.cmd;
+                            tb_master_if.req1_cmd_in <= NOP;
                             tb_master_if.req1_data_in <= 0;
                             tb_master_if.req1_tag_in <= 0; //NOP does not need a tag, defaulting to 0.
                         end
@@ -76,7 +76,7 @@ class tb_dvr
                 2: begin
                     case(tr.cmd)
                         NOP: begin
-                           tb_master_if.req2_cmd_in <= tr.cmd;
+                           tb_master_if.req2_cmd_in <= NOP;
                            tb_master_if.req2_data_in <= 0;
                            tb_master_if.req2_tag_in <= 0;
                         end
@@ -96,7 +96,7 @@ class tb_dvr
                 3: begin
                     case(tr.cmd)
                         NOP: begin
-                           tb_master_if.req3_cmd_in <= tr.cmd;
+                           tb_master_if.req3_cmd_in <= NOP;
                            tb_master_if.req3_data_in <= 0;
                            tb_master_if.req3_tag_in <= 0;
                         end 
@@ -116,7 +116,7 @@ class tb_dvr
                 4: begin
                     case(tr.cmd)
                         NOP: begin
-                           tb_master_if.req4_cmd_in <= tr.cmd;
+                           tb_master_if.req4_cmd_in <= NOP;
                            tb_master_if.req4_data_in <= 0;
                            tb_master_if.req4_tag_in <= 0;
                         end
