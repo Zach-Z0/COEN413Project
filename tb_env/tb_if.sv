@@ -79,31 +79,31 @@ interface tb_if(input ifClk); //clock will come frop TB top module, which doesn'
     //I think this is right, if ugly, but right. Leaving it as a TODO anyways just in case.
     //Slave(DUT) modport does not take a clocking block for... some reason. This is just how it is in Lab 2, 3, and 4
     modport Slave(
-        input ifRst;
-        input ifClk;
-        input ifReq1_cmd_in;
-        input ifReq2_cmd_in;
-        input ifReq3_cmd_in;
-        input ifReq4_cmd_in;
-        input ifReq1_data_in;
-        input ifReq2_data_in;
-        input ifReq3_data_in;
-        input ifReq4_data_in;
-        input ifReq1_tag_in;
-        input ifReq2_tag_in;
-        input ifReq3_tag_in;
-        input ifReq4_tag_in;
-        output ifResp1_out;
-        output ifResp2_out;
-        output ifResp3_out;
-        output ifResp4_out;
-        output ifData1_out;
-        output ifData2_out;
-        output ifData3_out;
-        output ifData4_out;
-        output ifTag1_out;
-        output ifTag2_out;
-        output ifTag3_out;
-        output ifTag4_out;
+        input ifRst,
+        input ifClk,
+        input ifReq1_cmd_in,
+        input ifReq2_cmd_in,
+        input ifReq3_cmd_in,
+        input ifReq4_cmd_in,
+        input ifReq1_data_in,
+        input ifReq2_data_in,
+        input ifReq3_data_in,
+        input ifReq4_data_in,
+        input ifReq1_tag_in,
+        input ifReq2_tag_in,
+        input ifReq3_tag_in,
+        input ifReq4_tag_in,
+        output ifResp1_out,
+        output ifResp2_out,
+        output ifResp3_out,
+        output ifResp4_out,
+        output ifData1_out,
+        output ifData2_out,
+        output ifData3_out,
+        output ifData4_out,
+        output ifTag1_out,
+        output ifTag2_out,
+        output ifTag3_out,
+        output ifTag4_out
     );
 endinterface
