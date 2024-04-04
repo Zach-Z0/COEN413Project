@@ -25,8 +25,6 @@ zachary zazzara (40096894)
 `include "tb_env/defs.sv"
 
 class tb_scb;
-    //TODO
-
     //Max # of transactions set in "test_cfg" class in "env.sv" file, passed here.
     int max_trans_cnt;
 
@@ -129,14 +127,14 @@ class tb_scb;
                 //Check if that tag exists in the agent transaction array, if yes, start comparison logic, if not,
                 //wait for it to appear (as it should eventually). The exists check is repeated twice since a do while loop
                 //will run at least once BEFORE checking the condition
-                do 
+                do begin
                     if(agtArr1.exists(p1_mon.tag)) begin
                         p1_agt = agtArr1[p1_mon.tag]; //Copy the reference out of array
                         agtArr1.delete(p1_mon.tag); //delete the object from the array
                         
                         //compare the two transactions to see if there's an error or not
                         case(p1_agt.cmd) //First sort by what operation type needs to be checked
-                            NOP: checkNoOp();
+                            NOP: $display($time, ": Error with the scb/checker validatePort1 case statement! Recieved a NOP!");
                             ADD: checkAdd();
                             SUB: checkSub();
                             LSH: checkLShift();
@@ -148,7 +146,7 @@ class tb_scb;
                         scb2agt.put(p1_agt); //Now that we're done, return the key to the agent for re-use
                     end
                     #10; //For stability in case agent array does not have the needed tag yet
-                while(!agtArr1.exists(p1_mon.tag)); 
+                end while(!agtArr1.exists(p1_mon.tag)); 
             end
             if(checkFinished());
                 wrap_up();
@@ -169,14 +167,14 @@ class tb_scb;
                 //Check if that tag exists in the agent transaction array, if yes, start comparison logic, if not,
                 //wait for it to appear (as it should eventually). The exists check is repeated twice since a do while loop
                 //will run at least once BEFORE checking the condition
-                do 
+                do begin
                     if(agtArr2.exists(p2_mon.tag)) begin
                         p2_agt = agtArr2[p2_mon.tag]; //Copy the reference out of array
                         agtArr2.delete(p2_mon.tag); //delete the object from the array
                         
                         //compare the two transactions to see if there's an error or not
                         case(p2_agt.cmd) //First sort by what operation type needs to be checked
-                            NOP: checkNoOp();
+                            NOP: $display($time, ": Error with the scb/checker validatePort2 case statement! Recieved a NOP!");
                             ADD: checkAdd();
                             SUB: checkSub();
                             LSH: checkLShift();
@@ -188,7 +186,7 @@ class tb_scb;
                         scb2agt.put(p2_agt); //Now that we're done, return the key to the agent for re-use
                     end
                     #10; //For stability in case agent array does not have the needed tag yet
-                while(!agtArr2.exists(p2_mon.tag)); 
+                end while(!agtArr2.exists(p2_mon.tag)); 
             end
             if(checkFinished());
                 wrap_up();
@@ -209,14 +207,14 @@ class tb_scb;
                 //Check if that tag exists in the agent transaction array, if yes, start comparison logic, if not,
                 //wait for it to appear (as it should eventually). The exists check is repeated twice since a do while loop
                 //will run at least once BEFORE checking the condition
-                do 
+                do begin
                     if(agtArr3.exists(p3_mon.tag)) begin
                         p3_agt = agtArr1[p3_mon.tag]; //Copy the reference out of array
                         agtArr3.delete(p3_mon.tag); //delete the object from the array
                         
                         //compare the two transactions to see if there's an error or not
                         case(p3_agt.cmd) //First sort by what operation type needs to be checked
-                            NOP: checkNoOp();
+                            NOP: $display($time, ": Error with the scb/checker validatePort3 case statement! Recieved a NOP!");
                             ADD: checkAdd();
                             SUB: checkSub();
                             LSH: checkLShift();
@@ -228,7 +226,7 @@ class tb_scb;
                         scb2agt.put(p3_agt); //Now that we're done, return the key to the agent for re-use
                     end
                     #10; //For stability in case agent array does not have the needed tag yet
-                while(!agtArr3.exists(p3_mon.tag)); 
+                end while(!agtArr3.exists(p3_mon.tag)); 
             end
             if(checkFinished());
                 wrap_up();
@@ -249,14 +247,14 @@ class tb_scb;
                 //Check if that tag exists in the agent transaction array, if yes, start comparison logic, if not,
                 //wait for it to appear (as it should eventually). The exists check is repeated twice since a do while loop
                 //will run at least once BEFORE checking the condition
-                do 
+                do begin
                     if(agtArr4.exists(p4_mon.tag)) begin
                         p4_agt = agtArr4[p4_mon.tag]; //Copy the reference out of array
                         agtArr4.delete(p4_mon.tag); //delete the object from the array
                         
                         //compare the two transactions to see if there's an error or not
                         case(p4_agt.cmd) //First sort by what operation type needs to be checked
-                            NOP: checkNoOp();
+                            NOP: $display($time, ": Error with the scb/checker validatePort4 case statement! Recieved a NOP!");
                             ADD: checkAdd();
                             SUB: checkSub();
                             LSH: checkLShift();
@@ -268,7 +266,7 @@ class tb_scb;
                         scb2agt.put(p4_agt); //Now that we're done, return the key to the agent for re-use
                     end
                     #10; //For stability in case agent array does not have the needed tag yet
-                while(!agtArr4.exists(p4_mon.tag)); 
+                end while(!agtArr4.exists(p4_mon.tag)); 
             end
             if(checkFinished());
                 wrap_up();
@@ -380,6 +378,8 @@ class tb_scb;
                 $display($time, ": Error with the checkRShift case statement! Bad response code data!");
         endcase
     endfunction: checkRShift
+    /*
+    //Note: NOP never gets to the scoreboard! This function is useless! Waiting till later to delete it, just in case.
 
     function void checkNoOp(tb_trans agt, tb_trans mon); //Not sure about this, design spec is ambiguous 
         req_data_t scbResult, monResult;
@@ -405,7 +405,7 @@ class tb_scb;
                 $display($time, ": Error with the checkLShift case statement! Bad response code data!");
         endcase
     endfunction: checkNoOp
-
+    */
     virtual function bit checkFinished(); //For determining when we've tested all outstanding transactions
         if(max_trans_cnt < 1)
             return 1;
