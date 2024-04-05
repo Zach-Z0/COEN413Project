@@ -172,8 +172,8 @@ package dvrPKG;
             tb_master_if.driver_cb.ifReq4_tag_in <= 0;
 
             $display("Got to pre-waiting 4 clock cycles for the reset");
-            //Wait the 3 clock cycles, did 4 for good measure.
-            repeat(4) @(this.tb_master_if.driver_cb);
+            //Wait the 3 clock cycles
+            repeat(3) @(this.tb_master_if.driver_cb);
             $display("Got to post-waiting 4 clock cycles for the reset");
             //Set reset back to LO, reset finished.
             tb_master_if.driver_cb.ifRst <= 0;

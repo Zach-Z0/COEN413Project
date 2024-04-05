@@ -32,7 +32,7 @@ package transPKG;
 		int id, trans_cnt; //transaction ID of current transaction object/instance
 
 		//Need contstrains for these randoms
-		constraint c_cmd {cmd inside {ADD, SUB, LSH, RSH, NOP};}
+		constraint c_cmd {cmd inside {ADD, SUB, LSH, RSH};}
 		constraint c_port {port inside {1,2,3,4};}
 
 		//Functions
@@ -44,7 +44,7 @@ package transPKG;
 		//TODO
 		//Don't know if I actually need this, might be useful for debugging later?
 		endfunction: display
-
+	
 		function tb_trans copy(); //Deep copy function just in case we need it?
 			tb_trans deep_cp = new();
 			count--; //Don't skew the IDs by making copies

@@ -104,10 +104,13 @@ class env;
 	endtask: pre_test
 
 	virtual task test();
+		begin
 		$display("Got to test task");
 		dvr.reset(); 
+		#500;
 		//Don't THINK I need to tell the monitor/scoreboard to ignore anything here b/c transactions aren't going anywhere yet
 		$display("Got to tesk task pre-fork");
+		end
 		fork
 			gen.main();
 		join_none
@@ -116,14 +119,18 @@ class env;
 
 	//Clean up function post running tests, waiting for everything to finish
 	virtual task post_test();
+		$display($time, ": Reached before fork post test.");
 		fork
+			$display($time, ": Waiting for gen and scb to end trigger.");
 			wait(gen.ended.triggered());
 			wait(scb.ended.triggered());
-			agt.wrap_up();
-			dvr.wrap_up();
-			mon.wrap_up(); 
+
 			//may wanna shuffle the order of these around later
 		join
+		$display($time, ": Reached post_test post-join.");
+		agt.wrap_up();
+		dvr.wrap_up();
+		mon.wrap_up();
 	endtask: post_test
 
 	task run();

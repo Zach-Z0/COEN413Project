@@ -71,52 +71,54 @@ package agentPKG;
                 case(tr.port)
                     1: begin
                         if(tr.cmd == NOP) begin //If the transaction is a NOP, do not lock a tag/key, just send it to driver
-                            $display($time, ": Port[%0b] current transaction is NOP, no tag assigned.", tr.port); //DEBUG
+                            $display($time, ": Port[%b] current transaction ID: %0d is NOP, no tag assigned.", tr.port, tr.id); //DEBUG
                         end 
                         else begin
                         in1_sem.get(1);
                         tr.tag = in1_avl_tags.pop_front();
-                        $display($time, ": Assigning port %0b current transaction tag: %0b", tr.port, tr.tag); //DEBUG
+                        $display($time, ": Assigning port %b current transaction ID: %0d tag: %b", tr.port, tr.id, tr.tag); //DEBUG
                         end                    
                     end
                     2: begin
                         if(tr.cmd == NOP) begin //If the transaction is a NOP, do not lock a tag/key, just send it to driver
-                            $display($time, ": Port[%0b] current transaction is NOP, no tag assigned.", tr.port); //DEBUG
+                            $display($time, ": Port[%b] current transaction ID: %0d is NOP, no tag assigned.",tr.port, tr.id); //DEBUG
                         end
                         else begin
                         in2_sem.get(1);
                         tr.tag = in2_avl_tags.pop_front();
-                        $display($time, ": Assigning port %0b current transaction tag: %0b", tr.port, tr.tag); //DEBUG
+                        $display($time, ": Assigning port %b current transaction ID: %0d tag: %b", tr.port, tr.id, tr.tag); //DEBUG
                         end
                     end
                     3: begin
                         if(tr.cmd == NOP) begin //If the transaction is a NOP, do not lock a tag/key, just send it to driver
-                            $display($time, ": Port[%0b] current transaction is NOP, no tag assigned.", tr.port); //DEBUG
+                            $display($time, ": Port[%b] current transaction ID: %0d is NOP, no tag assigned.", tr.port, tr.id); //DEBUG
                         end
                         else begin
                         in3_sem.get(1);
                         tr.tag = in3_avl_tags.pop_front();
-                        $display($time, ": Assigning port %0b current transaction tag: %0b", tr.port, tr.tag); //DEBUG
+                        $display($time, ": Assigning port %b current transaction ID: %0d tag: %b", tr.port, tr.id, tr.tag); //DEBUG
                         end
                     end
                     4: begin
                         if(tr.cmd == NOP) begin //If the transaction is a NOP, do not lock a tag/key, just send it to driver
-                            $display($time, ": Port[%0b] current transaction is NOP, no tag assigned.", tr.port); //DEBUG
+                            $display($time, ": Port[%b] current transaction ID: %0d is NOP, no tag assigned.", tr.port, tr.id); //DEBUG
                         end 
                         else begin
                         in4_sem.get(1);
                         tr.tag = in4_avl_tags.pop_front();
-                        $display($time, ": Assigning port %0b current transaction tag: %0b", tr.port, tr.tag); //DEBUG
+                        $display($time, ": Assigning port %b current transaction ID: %0d tag: %b", tr.port, tr.id, tr.tag); //DEBUG
                         end
                     end
                     default:
                         $display($time, ": Error with the agent tag assign case statement! Bad port data!");
                 endcase
+                $display($time, "Putting tr: %0d in agt2dvr mailbox.", tr.id);
                 agt2dvr.put(tr); //push the transaction to the driver mailbox (regardless of if it's a NOP or not)
 
-                if(tr.cmd != NOP) //push the transaction to the scoreboard mailbox if its NOT a NOP
+                if(tr.cmd != NOP) begin//push the transaction to the scoreboard mailbox if its NOT a NOP
+                    $display($time, "Putting tr: %0d in agt2scb mailbox.", tr.id);
                     agt2scb.put(tr); 
-
+                end
                 if((internalEnded == 1) && (gen2agt.num() == 0))
                     break;
             end
@@ -130,19 +132,23 @@ package agentPKG;
 
                 case(trRtrn.port)
                     1: begin
+                        $display($time, ": Port 1 Releasing key %b", trRtrn.tag);
                         in1_avl_tags.push_back(trRtrn.tag); //return the key to the queue BEFORE releasing the semaphore!
                         in1_sem.put(1);
                     end
                     2: begin
+                        $display($time, ": Port 2 Releasing key %b", trRtrn.tag);
                         in2_avl_tags.push_back(trRtrn.tag);
                         in2_sem.put(1);
                     end
                     3: begin
+                        $display($time, ": Port 3 Releasing key %b", trRtrn.tag);
                         in3_avl_tags.push_back(trRtrn.tag);
                         in3_sem.put(1);
 
                     end
                     4: begin
+                        $display($time, ": Port 4 Releasing key %b", trRtrn.tag);
                         in4_avl_tags.push_back(trRtrn.tag);
                         in4_sem.put(1);
                     end

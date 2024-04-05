@@ -74,7 +74,6 @@ package scbPKG;
                 validatePort3();
                 validatePort4();
             join
-            wait fork;
             $display($time, ": Scoreboard/Checker daemon stopping."); //Debug
             ->internalEnded;
         endtask: main
@@ -100,8 +99,11 @@ package scbPKG;
                         $display($time, ": Error with the scb/checker checkAgentMail case statement! Bad port data! (?)"); 
                 endcase
 
-                if((endBit == 1) && (agt2scb.num() == 0))
-                    break;
+                if(endBit == 1)
+                    if(agt2scb.num() == 0) begin
+                        $display("checkMailAgent end condition has been met");
+                        break;
+                    end
             end
             $display($time, ": Scoreboard/Checker checkMailAgent task stopping."); //Debug
         endtask: checkMailAgent
@@ -119,8 +121,11 @@ package scbPKG;
                         $display($time, ": Error with the scb/checker checkMonitorMail case statement! Bad port data! (?)");   
                 endcase
 
-                if((endBit == 1) && (mon2scb.num() == 0))
-                    break;            
+                if(endBit == 1 )
+                    if(mon2scb.num() == 0) begin
+                        $display("checkMailMonitor end condition has been met");
+                        break;           
+                    end
             end
             $display($time, ": Scoreboard/Checker checkMailMonitor task stopping."); //Debug
         endtask: checkMailMonitor
@@ -154,9 +159,10 @@ package scbPKG;
                         #10; //For stability in case agent array does not have the needed tag yet
                     end while(!agtArr1.exists(p1_mon.tag)); 
                 end
-                if(checkFinished());
+                if(checkFinished()) begin
+                    $display($time, ": validatePort1 is triggering wrap_up");
                     wrap_up();
-
+                end
                 if((endBit == 1) && (monQue1.size() == 0) && (agtArr1.size() == 0)) //Checking if finished at End of Test
                     break;
 
@@ -194,8 +200,10 @@ package scbPKG;
                         #10; //For stability in case agent array does not have the needed tag yet
                     end while(!agtArr2.exists(p2_mon.tag)); 
                 end
-                if(checkFinished());
+                if(checkFinished()) begin
+                    $display($time, ": validatePort2 is triggering wrap_up");
                     wrap_up();
+                end
 
                 if((endBit == 1) && (monQue2.size() == 0) && (agtArr2.size() == 0)) //Checking if finished at End of Test
                     break;
@@ -234,8 +242,10 @@ package scbPKG;
                         #10; //For stability in case agent array does not have the needed tag yet
                     end while(!agtArr3.exists(p3_mon.tag)); 
                 end
-                if(checkFinished());
+                if(checkFinished()) begin
+                    $display($time, ": validatePort3 is triggering wrap_up");
                     wrap_up();
+                end
 
                 if((endBit == 1) && (monQue3.size() == 0) && (agtArr3.size() == 0)) //Checking if finished at End of Test
                     break;
@@ -274,8 +284,10 @@ package scbPKG;
                         #10; //For stability in case agent array does not have the needed tag yet
                     end while(!agtArr4.exists(p4_mon.tag)); 
                 end
-                if(checkFinished());
+                if(checkFinished()) begin
+                    $display($time, ": validatePort4 is triggering wrap_up");
                     wrap_up();
+                end
 
                 if((endBit == 1) && (monQue4.size() == 0) && (agtArr4.size() == 0)) //Checking if finished at End of Test
                     break;
@@ -414,9 +426,9 @@ package scbPKG;
         */
         virtual function bit checkFinished(); //For determining when we've tested all outstanding transactions
             if(max_trans_cnt < 1)
-                return 1;
-            else 
-                return 0;
+                checkFinished = 1;
+            else
+                checkFinished = 0;
         endfunction: checkFinished
     endclass: tb_scb
 endpackage

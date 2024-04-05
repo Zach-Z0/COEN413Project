@@ -16,7 +16,7 @@ Created on: March 29th, 2024
 
 import defs::*;
 
-interface tb_if(input ifClk); //clock will come frop TB top module, which doesn't exist yet
+interface tb_if(input wire ifClk); //clock will come frop TB top module, which doesn't exist yet
 
     //clock passed from top, doesn't get declared here
     //Reset, goes into DUT
