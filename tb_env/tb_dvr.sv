@@ -5,14 +5,11 @@ them into low level commands for the input lines of the DUT.
 Also handles reset commands and passing through the clock.
 Needs to work closely with the interface.
 
-Possibly could have used threads here to split the driver up into 4 "lanes" so it can handle multiple transactions at once?
-Oh well...
-
 Zachary Zazzara (40096894)
 
 Created on: March 29th, 2024
 */
-//import transPKG::*;
+
 //`include "tb_env/defs.sv"
 package dvrPKG;
     import defs::*;
@@ -50,7 +47,7 @@ package dvrPKG;
                 Nested case statements here, ugly, but relatively simple?
                 NOTE: The "NOP" case could be changed to just be the default case... but I want the error message for debugging.
                 Note 2: Not sure if NOP statements are supposed to be fed in with tags and subsequently need to be
-                verified against DUT output, waiting for responce from TA. THIS WILL HAVE REPERCUSSIONS ON THE AGENT CLASS 
+                verified against DUT output. THIS WILL HAVE REPERCUSSIONS ON THE AGENT CLASS 
                 IF CHANGED, AND THE SCOREBOARD TOO. Will need to exclude NOP commands from being sent to the scoreboard/checker.
                 */
                 case(tr.port)

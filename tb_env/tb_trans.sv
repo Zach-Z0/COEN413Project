@@ -8,13 +8,6 @@ Created on: March 27th, 2024
 
 */
 
-/*
-Not sure if I actually need the two lines below + 'endif'
-Put them in for now, because I see it in lab 3 & 4 code. 
-Seems to be related to the interface and prevents a compiler issue
-related to "multiple declaration" errors. So if you ever see any
-of those, uncomment lines marked with (&&) these lines, I guess.
-*/
 
 package transPKG;
 	import defs::*;
@@ -41,7 +34,6 @@ package transPKG;
 
 		function void display();
 		//TODO
-		//Don't know if I actually need this, might be useful for debugging later?
 		endfunction: display
 	
 		function tb_trans copy(); //Deep copy function just in case we need it?

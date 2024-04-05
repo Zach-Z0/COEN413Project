@@ -4,8 +4,6 @@ Wrapper class
 
 Takes the DUT inputs/outputs delcared in "calc2_top" and equates them to interface signals.
 
-This is done, I think?
-
 Zachary Zazzara (40096894)
 ze xi si (40175054)
 
@@ -58,9 +56,6 @@ module wrapper (tb_if.Slave interf);
               .b_clk()
        );
        //The "Misc" section is signals that aren't mentioned anywhere in the design specification but are present in calc2_top.sv
-       //No idea what to do with these wire connections, the TA said connections can be made to these signals but to 
-       //Concentrate on the signals specified in the design specification when generating inputs.
-       //Note: because of the slave modport speficiation, the MISC signals might not be visible right now to the wrapper
-       //Possibly will need to edit the modport specifications in tb_if.sv later.
+       //No idea what to do with these wire connections.
 
 endmodule: wrapper
