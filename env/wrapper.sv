@@ -52,10 +52,10 @@ module wrapper (tb_if.Slave interf);
               .out_tag3(interf.ifTag3_out),
               .out_tag4(interf.ifTag4_out),
               //======================================= MISC
-              .scan_in(/*Dummy signal*/),
-              .scan_out(/*Dummy signal*/),
-              .a_clk(/*Dummy signal*/),
-              .b_clk(/*Dummy signal*/)
+              .scan_in(),
+              .scan_out(),
+              .a_clk(),
+              .b_clk()
        );
        //The "Misc" section is signals that aren't mentioned anywhere in the design specification but are present in calc2_top.sv
        //No idea what to do with these wire connections, the TA said connections can be made to these signals but to 

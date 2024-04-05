@@ -11,8 +11,8 @@ I think this is done?
 Created on: March 29th, 2024
 */
 
-//`include "env/wrapper.sv" //This might cause compiler errors, leaving it here for now
 //`include "tb_env/tb_if.sv"
+//`include "env/wrapper.sv" //This might cause compiler errors, leaving it here for now
 
 module top;
     parameter SIM_CYCLE = 100;
@@ -21,6 +21,7 @@ module top;
     always #(SIM_CYCLE/2)
         clk = ~clk;
 
+    //$display("Got to top module, right before creating interface");
     tb_if interf(clk); //Create interface
     test tb1(interf); //Create testbench
     wrapper wrap(interf.Slave); //Create wrapper and pass interface to it, which then creates DUT in wrapper module

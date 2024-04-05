@@ -14,7 +14,7 @@ Created on: March 29th, 2024
 //`ifndef TB_IF_DEFINE
 //`define TB_IF_DEFINE
 
-`include "tb_env/defs.sv"
+import defs::*;
 
 interface tb_if(input ifClk); //clock will come frop TB top module, which doesn't exist yet
 
@@ -33,7 +33,6 @@ interface tb_if(input ifClk); //clock will come frop TB top module, which doesn'
     logic [REQ_TAG_WIDTH-1:0] ifTag1_out, ifTag2_out, ifTag3_out, ifTag4_out;
 
     clocking driver_cb @(negedge ifClk); 
-        //TODO
         //Do I need to change default timings??? I'm not sure yet. I don't THINK so...
         //Make changes here after more work is done on the driver functions/tasks (?)
         //I THINK only need outputs here for the transactions going Driver -> DUT and nothing else... but we'll see I guess.
@@ -53,8 +52,6 @@ interface tb_if(input ifClk); //clock will come frop TB top module, which doesn'
     endclocking
 
     clocking monitor_cb @(negedge ifClk); 
-        //TODO
-        //I think most everything here should be an input?
         //Timing question applies here too.
         //Make changes here after more work is done on the monitor functions (?)
         
@@ -78,7 +75,6 @@ interface tb_if(input ifClk); //clock will come frop TB top module, which doesn'
     modport Monitor(clocking monitor_cb); //Modport for the monitor to assert signals into the interface (?)
 
     //Modport for the DUT to read signals from the interface
-    //TODO
     //I think this is right, if ugly, but right. Leaving it as a TODO anyways just in case.
     //Slave(DUT) modport does not take a clocking block for... some reason. This is just how it is in Lab 2, 3, and 4
     modport Slave(

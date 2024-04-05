@@ -16,15 +16,19 @@ Created on: March 28th, 2024
 //`ifndef TB_IF_DEFINE
 //`define TB_IF_DEFINE
 
-//`include "tb_env/tb_trans.sv"
-`include "tb_env/tb_gen.sv"
-`include "tb_env/tb_agt.sv"
-`include "tb_env/tb_dvr.sv"
-`include "tb_env/tb_moni.sv"
+import transPKG::*;
+import defs::*;
+import agentPKG::*;
+import genPKG::*;
+import dvrPKG::*;
+import moniPKG::*;
+import scbPKG::*;
 //`include "tb_env/tb_if.sv"
-`include "env/scoreboard.sv"
-
-//Will need more includes here as we write more classes
+//`include "tb_env/tb_agt.sv"
+//`include "tb_env/tb_dvr.sv"
+//`include "tb_env/tb_moni.sv"
+//`include "tb_env/tb_gen.sv"
+//`include "env/scoreboard.sv"
 
 class test_cfg; //Configuration class
 	//THIS SETS max_trans_cnt for other modules
@@ -56,7 +60,7 @@ class env;
 	virtual tb_if interf;
 
 	function new(virtual tb_if interf);
-
+		$display("Got into the new function of env");
 		this.interf = interf;
 
 		//Mailboxs go here, 16 items max in each due to (4 input lines) * (4 outstanding commands per line)
@@ -88,6 +92,7 @@ class env;
 
 	virtual task pre_test();
 		//Sync scoreboard max_trans_cnt with generator max_trans_cnt
+		$display("Got to pre_test pre-fork");
 		fork
 			//start scoreboard, driver, monitor, agent mains
 			agt.main();
@@ -95,14 +100,18 @@ class env;
 			mon.main();
 			scb.main();
 		join_none
+		$display("Got to pre_test post-fork");
 	endtask: pre_test
 
 	virtual task test();
+		$display("Got to test task");
 		dvr.reset(); 
 		//Don't THINK I need to tell the monitor/scoreboard to ignore anything here b/c transactions aren't going anywhere yet
+		$display("Got to tesk task pre-fork");
 		fork
 			gen.main();
 		join_none
+		$display("Got to tesk task post-fork");
 	endtask: test	
 
 	//Clean up function post running tests, waiting for everything to finish
@@ -118,6 +127,7 @@ class env;
 	endtask: post_test
 
 	task run();
+		$display("Got to the main Env's run function");
 		pre_test();
 		test();
 		post_test();

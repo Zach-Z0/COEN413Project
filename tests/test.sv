@@ -19,8 +19,8 @@ program automatic test(tb_if interf);
     env mainEnv;
 
     initial begin
+        $display("Got to test.sv 's initial loop");
         mainEnv = new(interf);
-
         //start the tests
         mainEnv.run();
         
