@@ -6,12 +6,13 @@ Will need a wrapper class to neatly connect the interface to the DUT.
 
 Needs to be sensisitve to NEGATIVE EDGE of clock as defined in the design specification
 Zachary Zazzara (40096894)
-zexi si (40175054)
+ze xi si (40175054)
 
 Created on: March 29th, 2024
 */
 
-`include "tb_env/defs.sv"
+
+import defs::*;
 
 interface tb_if(input ifClk); //clock will come frop TB top module, which doesn't exist yet
 
@@ -30,7 +31,6 @@ interface tb_if(input ifClk); //clock will come frop TB top module, which doesn'
     logic [REQ_TAG_WIDTH-1:0] ifTag1_out, ifTag2_out, ifTag3_out, ifTag4_out;
 
     clocking driver_cb @(negedge ifClk); 
-        //TODO
         //Do I need to change default timings??? I'm not sure yet. I don't THINK so...
         //Make changes here after more work is done on the driver functions/tasks (?)
         //I THINK only need outputs here for the transactions going Driver -> DUT and nothing else... but we'll see I guess.
@@ -50,8 +50,6 @@ interface tb_if(input ifClk); //clock will come frop TB top module, which doesn'
     endclocking
 
     clocking monitor_cb @(negedge ifClk); 
-        //TODO
-        //I think most everything here should be an input?
         //Timing question applies here too.
         //Make changes here after more work is done on the monitor functions (?)
         
@@ -75,35 +73,34 @@ interface tb_if(input ifClk); //clock will come frop TB top module, which doesn'
     modport Monitor(clocking monitor_cb); //Modport for the monitor to assert signals into the interface (?)
 
     //Modport for the DUT to read signals from the interface
-    //TODO
     //I think this is right, if ugly, but right. Leaving it as a TODO anyways just in case.
     //Slave(DUT) modport does not take a clocking block for... some reason. This is just how it is in Lab 2, 3, and 4
     modport Slave(
-        input ifRst;
-        input ifClk;
-        input ifReq1_cmd_in;
-        input ifReq2_cmd_in;
-        input ifReq3_cmd_in;
-        input ifReq4_cmd_in;
-        input ifReq1_data_in;
-        input ifReq2_data_in;
-        input ifReq3_data_in;
-        input ifReq4_data_in;
-        input ifReq1_tag_in;
-        input ifReq2_tag_in;
-        input ifReq3_tag_in;
-        input ifReq4_tag_in;
-        output ifResp1_out;
-        output ifResp2_out;
-        output ifResp3_out;
-        output ifResp4_out;
-        output ifData1_out;
-        output ifData2_out;
-        output ifData3_out;
-        output ifData4_out;
-        output ifTag1_out;
-        output ifTag2_out;
-        output ifTag3_out;
-        output ifTag4_out;
+        input ifRst,
+        input ifClk,
+        input ifReq1_cmd_in,
+        input ifReq2_cmd_in,
+        input ifReq3_cmd_in,
+        input ifReq4_cmd_in,
+        input ifReq1_data_in,
+        input ifReq2_data_in,
+        input ifReq3_data_in,
+        input ifReq4_data_in,
+        input ifReq1_tag_in,
+        input ifReq2_tag_in,
+        input ifReq3_tag_in,
+        input ifReq4_tag_in,
+        output ifResp1_out,
+        output ifResp2_out,
+        output ifResp3_out,
+        output ifResp4_out,
+        output ifData1_out,
+        output ifData2_out,
+        output ifData3_out,
+        output ifData4_out,
+        output ifTag1_out,
+        output ifTag2_out,
+        output ifTag3_out,
+        output ifTag4_out
     );
 endinterface
