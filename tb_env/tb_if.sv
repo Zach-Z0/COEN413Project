@@ -14,7 +14,7 @@ Created on: March 29th, 2024
 
 import defs::*;
 
-interface tb_if(input ifClk); //clock will come frop TB top module, which doesn't exist yet
+interface tb_if(input ifClk); 
 
     //clock passed from top, doesn't get declared here
     //Reset, goes into DUT
@@ -31,8 +31,7 @@ interface tb_if(input ifClk); //clock will come frop TB top module, which doesn'
     logic [REQ_TAG_WIDTH-1:0] ifTag1_out, ifTag2_out, ifTag3_out, ifTag4_out;
 
     clocking driver_cb @(negedge ifClk); 
-        //Do I need to change default timings??? I'm not sure yet. I don't THINK so...
-        //Make changes here after more work is done on the driver functions/tasks (?)
+        //default timings? 
         //I THINK only need outputs here for the transactions going Driver -> DUT and nothing else... but we'll see I guess.
         output ifRst;
         output ifReq1_cmd_in;
@@ -51,9 +50,7 @@ interface tb_if(input ifClk); //clock will come frop TB top module, which doesn'
 
     clocking monitor_cb @(negedge ifClk); 
         //Timing question applies here too.
-        //Make changes here after more work is done on the monitor functions (?)
-        
-        //Only need outputs here for the transactions going DUT -> Monitor and nothing else... but we'll see I guess.
+        //Only need outputs here for the transactions going DUT -> Monitor and nothing else
         input ifResp1_out;
         input ifResp2_out;
         input ifResp3_out;
@@ -73,8 +70,6 @@ interface tb_if(input ifClk); //clock will come frop TB top module, which doesn'
     modport Monitor(clocking monitor_cb); //Modport for the monitor to assert signals into the interface (?)
 
     //Modport for the DUT to read signals from the interface
-    //I think this is right, if ugly, but right. Leaving it as a TODO anyways just in case.
-    //Slave(DUT) modport does not take a clocking block for... some reason. This is just how it is in Lab 2, 3, and 4
     modport Slave(
         input ifRst,
         input ifClk,

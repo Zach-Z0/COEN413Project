@@ -3,17 +3,16 @@
 Environment class which instanciates the following:
 	-TB Generator
 	-TB Agent
-	-More items TBD
+	-TB Scoreboard
+	-TB Monitor
+	-TB Driver
 
+Starts tests, pre-tests, and post-tests.
 
 Zachary Zazzara (40096894)
-
-Created on: March 28th, 2024
+reated on: March 28th, 2024
 
 */
-
-//`ifndef TB_IF_DEFINE
-//`define TB_IF_DEFINE
 
 import transPKG::*;
 import defs::*;
@@ -64,18 +63,16 @@ class env;
 		this.interf = interf;
 
 		//Mailboxs go here, 16 items max in each due to (4 input lines) * (4 outstanding commands per line)
-		//This might be wrong? I don't know, it's my best guess right now.
-		//Possible deadlock by doing this???? Probably not.
+		//Removed item limit for testing 
 		gen2agt = new();
 		agt2dvr = new();
 		agt2scb = new();
 		scb2agt = new(); //Key return
-		mon2scb = new(); //I don't think this one needs a limit?
+		mon2scb = new();
 
 
 		tcfg = new(); //Instanciate test config
 
-		//Copy pasted from lab 4, just seems good to have in case.
 		if (!tcfg.randomize()) begin
 				$display("test_cfg::randomize failed");
 				$finish;
@@ -108,7 +105,6 @@ class env;
 		$display("Got to test task");
 		dvr.reset(); 
 		#500;
-		//Don't THINK I need to tell the monitor/scoreboard to ignore anything here b/c transactions aren't going anywhere yet
 		$display("Got to tesk task pre-fork");
 		end
 		fork
@@ -140,5 +136,3 @@ class env;
 		post_test();
 	endtask: run
 endclass: env
-
-//`endif

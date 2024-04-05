@@ -17,7 +17,6 @@
     */
 
     //`include "tb_env/tb_gen.sv"
-    //other includes? I'm not sure right now
 package agentPKG;   
     import defs::*;
     import transPKG::*;
@@ -33,7 +32,7 @@ package agentPKG;
         bit internalEnded;
 
         //Semaphores for keeping track of how many pending transactions have been sent to the DUT
-        //Needs to be accessible from the scoreboard, i'm pretty sure.
+        //Needs to be accessible from the scoreboard
         semaphore in1_sem, in2_sem, in3_sem, in4_sem;
 
         //Define queues that hold available tags for all 4 ports

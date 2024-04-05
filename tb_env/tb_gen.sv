@@ -8,9 +8,6 @@ Created on: March 28th, 2024
 
  */
 
-//`ifndef TB_IF_DEFINE
-//`define TB_IF_DEFINE
-//import transPKG::*;
 //`include "tb_env/defs.sv"
 package genPKG;
     import defs::*;
@@ -22,7 +19,6 @@ package genPKG;
         rand tb_trans rand_tr;
 
         //Terminate transaction generation when trans_cnt > max_trans_cnt
-        //Not 100% sure we need this, but probably do, so i'm putting it here for now.
         int max_trans_cnt;
 
         //Number of currently performed transactions
@@ -63,7 +59,6 @@ package genPKG;
         endtask: main
 
         //Function checks to see how many more transaction objects need to be generated before the test is complete
-        //Same as in lab 4
         virtual function int end_of_test();
             if(trans_cnt >= max_trans_cnt)
                 return 1;
@@ -72,7 +67,6 @@ package genPKG;
         endfunction
 
         //Returns a transaction object associated with tr member
-        //Same as in lab 4
         virtual function tb_trans get_transaction();
             rand_tr.trans_cnt = trans_cnt;
             if (! this.rand_tr.randomize())
