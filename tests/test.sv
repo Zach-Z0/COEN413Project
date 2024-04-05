@@ -1,9 +1,6 @@
 /*
 
 Starting file that calls literally everything else. This file intanciates the environment, runs it, then everything else.
-This is pretty much taken exactly as it is from lab 3 & 4
-
-I think this is just done?
 
 Zachary Zazzara (40096894)
 ze xi si (40175054)

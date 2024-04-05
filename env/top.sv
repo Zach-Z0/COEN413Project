@@ -4,7 +4,6 @@ Top level file for the program, instantiates the interface, testbench and DUT.
 This is pretty much taken exactly as it is from lab 3 & 4
 
 Zachary Zazzara (40096894)
-ze xi si (40175054)
 
 I think this is done?
 

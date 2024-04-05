@@ -7,7 +7,6 @@ Environment class which instanciates the following:
 
 
 Zachary Zazzara (40096894)
-ze xi si (40175054)
 
 Created on: March 28th, 2024
 
@@ -54,7 +53,8 @@ class env;
 
 	//Instanciate mailboxes here
 	//Mailboxes: Generator -> Agent, Agent -> Driver, Monitor -> Scoreboard/Checker (and back)
-	mailbox #(tb_trans) gen2agt, agt2dvr, agt2scb, scb2agt, mon2scb ;
+	mailbox #(tb_trans) gen2agt, agt2dvr, agt2scb, scb2agt;
+	mailbox #(tb_trans_out) mon2scb;
 
 	//Interface declaration
 	virtual tb_if interf;
@@ -66,10 +66,10 @@ class env;
 		//Mailboxs go here, 16 items max in each due to (4 input lines) * (4 outstanding commands per line)
 		//This might be wrong? I don't know, it's my best guess right now.
 		//Possible deadlock by doing this???? Probably not.
-		gen2agt = new(16);
-		agt2dvr = new(16);
-		agt2scb = new(16);
-		scb2agt = new(16);
+		gen2agt = new();
+		agt2dvr = new();
+		agt2scb = new();
+		scb2agt = new(); //Key return
 		mon2scb = new(); //I don't think this one needs a limit?
 
 
@@ -86,7 +86,7 @@ class env;
 		agt = new(gen2agt, agt2dvr, agt2scb, scb2agt);
 		dvr = new(this.interf, agt2dvr);
 		mon = new(this.interf, mon2scb);
-		scb = new(tcfg.trans_cnt, agt2scb, mon2scb);
+		scb = new(tcfg.trans_cnt, agt2scb, scb2agt, mon2scb);
 
 	endfunction: new
 

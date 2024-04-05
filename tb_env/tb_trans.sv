@@ -3,7 +3,6 @@
 Transaction object class that should then be used by the generator class.
 
 Zachary Zazzara (40096894)
-ze xi si (40175054)
 
 Created on: March 27th, 2024
 
@@ -47,8 +46,8 @@ package transPKG;
 	
 		function tb_trans copy(); //Deep copy function just in case we need it?
 			tb_trans deep_cp = new();
-			count--; //Don't skew the IDs by making copies
-			deep_cp.id = this.id;
+			//count--; //Don't skew the IDs by making copies
+			//deep_cp.id = this.id;
 			deep_cp.cmd = this.cmd;
 			deep_cp.op1 = this.op1;
 			deep_cp.op2 = this.op2;
@@ -57,4 +56,20 @@ package transPKG;
 			copy = deep_cp;
 		endfunction: copy
 	endclass: tb_trans
+
+	class tb_trans_out; //For handling transactions created by the monitor
+		tb_trans tr;
+		static int count = 0;
+		int id;
+
+		out_resp_t out_resp;
+		req_data_t out_data;
+		req_tag_t out_tag;
+		req_port_t out_port;
+		int port;
+
+		function new();
+			id = count++;
+		endfunction
+	endclass
 endpackage

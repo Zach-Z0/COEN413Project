@@ -16,8 +16,6 @@ Gameplan:
 
     --Return tag/key to the agent via dedicated mailbox
 
-
-zexi si (40175054 )
 zachary zazzara (40096894)
 */
 // import transPKG::*;
@@ -43,13 +41,14 @@ package scbPKG;
         int failedTests;
 
         //Mailboxes for the incoming transactions, Agent -> Scoreboard/Checker, Monitor ->Scb/Checker, Scb/Ch -> Agent
-        mailbox #(tb_trans) agt2scb, mon2scb, scb2agt;
+        mailbox #(tb_trans) agt2scb, scb2agt;
+        mailbox #(tb_trans_out) mon2scb;
 
         //Create the queues
-        tb_trans monQue1 [$];
-        tb_trans monQue2 [$];
-        tb_trans monQue3 [$];
-        tb_trans monQue4 [$];
+        tb_trans_out monQue1 [$];
+        tb_trans_out monQue2 [$];
+        tb_trans_out monQue3 [$];
+        tb_trans_out monQue4 [$];
 
         //Create the associatve arrays, index is the TAG as defined in "defs.sv", sorted by PORT (1,2,3,4)
         tb_trans agtArr1 [req_tag_t];
@@ -57,9 +56,10 @@ package scbPKG;
         tb_trans agtArr3 [req_tag_t];
         tb_trans agtArr4 [req_tag_t];
 
-        function new(int max_trans_cnt, mailbox #(tb_trans) agt2scb, mon2scb);
+        function new(int max_trans_cnt, mailbox #(tb_trans) agt2scb, scb2agt, mailbox #(tb_trans_out) mon2scb);
             this.max_trans_cnt = max_trans_cnt;
             this.agt2scb = agt2scb;
+            this.scb2agt = scb2agt;
             this.mon2scb = mon2scb;
             endBit = 0;
         endfunction
@@ -109,14 +109,14 @@ package scbPKG;
         endtask: checkMailAgent
 
         task checkMailMonitor(); //same thing as checkMailAgent task
-            tb_trans mon_tr;
+            tb_trans_out mon_tr;
             forever begin
                 mon2scb.get(mon_tr);
                 case(mon_tr.port)
-                    1: monQue1.push_back(mon_tr.copy());
-                    2: monQue2.push_back(mon_tr.copy());
-                    3: monQue3.push_back(mon_tr.copy());
-                    4: monQue4.push_back(mon_tr.copy());       
+                    1: monQue1.push_back(mon_tr);
+                    2: monQue2.push_back(mon_tr);
+                    3: monQue3.push_back(mon_tr);
+                    4: monQue4.push_back(mon_tr);       
                     default:
                         $display($time, ": Error with the scb/checker checkMonitorMail case statement! Bad port data! (?)");   
                 endcase
@@ -131,7 +131,9 @@ package scbPKG;
         endtask: checkMailMonitor
 
         task validatePort1();
-            tb_trans p1_mon, p1_agt;
+            tb_trans p1_agt;
+            tb_trans_out p1_mon;
+
             forever begin
                 if(monQue1.size() > 0) begin //Wait for monitor transactions to appear in the queue.
                     p1_mon = monQue1.pop_front();
@@ -139,9 +141,9 @@ package scbPKG;
                     //wait for it to appear (as it should eventually). The exists check is repeated twice since a do while loop
                     //will run at least once BEFORE checking the condition
                     do begin
-                        if(agtArr1.exists(p1_mon.tag)) begin
-                            p1_agt = agtArr1[p1_mon.tag]; //Copy the reference out of array
-                            agtArr1.delete(p1_mon.tag); //delete the object from the array
+                        if(agtArr1.exists(p1_mon.out_tag)) begin
+                            p1_agt = agtArr1[p1_mon.out_tag]; //Copy the reference out of array
+                            agtArr1.delete(p1_mon.out_tag); //delete the object from the array
                             
                             //compare the two transactions to see if there's an error or not
                             case(p1_agt.cmd) //First sort by what operation type needs to be checked
@@ -157,7 +159,7 @@ package scbPKG;
                             scb2agt.put(p1_agt); //Now that we're done, return the key to the agent for re-use
                         end
                         #10; //For stability in case agent array does not have the needed tag yet
-                    end while(!agtArr1.exists(p1_mon.tag)); 
+                    end while(!agtArr1.exists(p1_mon.out_tag)); 
                 end
                 if(checkFinished()) begin
                     $display($time, ": validatePort1 is triggering wrap_up");
@@ -172,7 +174,9 @@ package scbPKG;
         endtask: validatePort1
 
         task validatePort2();
-            tb_trans p2_mon, p2_agt;
+            tb_trans p2_agt;
+            tb_trans_out p2_mon;
+
             forever begin
                 if(monQue2.size() > 0) begin //Wait for monitor transactions to appear in the queue.
                     p2_mon = monQue2.pop_front();
@@ -180,9 +184,9 @@ package scbPKG;
                     //wait for it to appear (as it should eventually). The exists check is repeated twice since a do while loop
                     //will run at least once BEFORE checking the condition
                     do begin
-                        if(agtArr2.exists(p2_mon.tag)) begin
-                            p2_agt = agtArr2[p2_mon.tag]; //Copy the reference out of array
-                            agtArr2.delete(p2_mon.tag); //delete the object from the array
+                        if(agtArr2.exists(p2_mon.out_tag)) begin
+                            p2_agt = agtArr2[p2_mon.out_tag]; //Copy the reference out of array
+                            agtArr2.delete(p2_mon.out_tag); //delete the object from the array
                             
                             //compare the two transactions to see if there's an error or not
                             case(p2_agt.cmd) //First sort by what operation type needs to be checked
@@ -198,7 +202,7 @@ package scbPKG;
                             scb2agt.put(p2_agt); //Now that we're done, return the key to the agent for re-use
                         end
                         #10; //For stability in case agent array does not have the needed tag yet
-                    end while(!agtArr2.exists(p2_mon.tag)); 
+                    end while(!agtArr2.exists(p2_mon.out_tag)); 
                 end
                 if(checkFinished()) begin
                     $display($time, ": validatePort2 is triggering wrap_up");
@@ -214,7 +218,9 @@ package scbPKG;
         endtask: validatePort2
 
         task validatePort3();
-            tb_trans p3_mon, p3_agt;
+            tb_trans p3_agt;
+            tb_trans_out p3_mon;
+
             forever begin
                 if(monQue3.size() > 0) begin //Wait for monitor transactions to appear in the queue.
                     p3_mon = monQue3.pop_front();
@@ -222,9 +228,9 @@ package scbPKG;
                     //wait for it to appear (as it should eventually). The exists check is repeated twice since a do while loop
                     //will run at least once BEFORE checking the condition
                     do begin
-                        if(agtArr3.exists(p3_mon.tag)) begin
-                            p3_agt = agtArr1[p3_mon.tag]; //Copy the reference out of array
-                            agtArr3.delete(p3_mon.tag); //delete the object from the array
+                        if(agtArr3.exists(p3_mon.out_tag)) begin
+                            p3_agt = agtArr3[p3_mon.out_tag]; //Copy the reference out of array
+                            agtArr3.delete(p3_mon.out_tag); //delete the object from the array
                             
                             //compare the two transactions to see if there's an error or not
                             case(p3_agt.cmd) //First sort by what operation type needs to be checked
@@ -240,7 +246,7 @@ package scbPKG;
                             scb2agt.put(p3_agt); //Now that we're done, return the key to the agent for re-use
                         end
                         #10; //For stability in case agent array does not have the needed tag yet
-                    end while(!agtArr3.exists(p3_mon.tag)); 
+                    end while(!agtArr3.exists(p3_mon.out_tag)); 
                 end
                 if(checkFinished()) begin
                     $display($time, ": validatePort3 is triggering wrap_up");
@@ -256,7 +262,8 @@ package scbPKG;
         endtask: validatePort3
 
         task validatePort4();
-            tb_trans p4_mon, p4_agt;
+            tb_trans p4_agt;
+            tb_trans_out p4_mon;
             forever begin
                 if(monQue4.size() > 0) begin //Wait for monitor transactions to appear in the queue.
                     p4_mon = monQue4.pop_front();
@@ -264,9 +271,9 @@ package scbPKG;
                     //wait for it to appear (as it should eventually). The exists check is repeated twice since a do while loop
                     //will run at least once BEFORE checking the condition
                     do begin
-                        if(agtArr4.exists(p4_mon.tag)) begin
-                            p4_agt = agtArr4[p4_mon.tag]; //Copy the reference out of array
-                            agtArr4.delete(p4_mon.tag); //delete the object from the array
+                        if(agtArr4.exists(p4_mon.out_tag)) begin
+                            p4_agt = agtArr4[p4_mon.out_tag]; //Copy the reference out of array
+                            agtArr4.delete(p4_mon.out_tag); //delete the object from the array
                             
                             //compare the two transactions to see if there's an error or not
                             case(p4_agt.cmd) //First sort by what operation type needs to be checked
@@ -282,7 +289,7 @@ package scbPKG;
                             scb2agt.put(p4_agt); //Now that we're done, return the key to the agent for re-use
                         end
                         #10; //For stability in case agent array does not have the needed tag yet
-                    end while(!agtArr4.exists(p4_mon.tag)); 
+                    end while(!agtArr4.exists(p4_mon.out_tag)); 
                 end
                 if(checkFinished()) begin
                     $display($time, ": validatePort4 is triggering wrap_up");
@@ -297,12 +304,12 @@ package scbPKG;
             $display($time, ": Scoreboard/Checker validatePort4 task stopping."); //Debug
         endtask: validatePort4
 
-        function void checkAdd(tb_trans agt, tb_trans mon);
+        function void checkAdd(tb_trans agt, tb_trans_out mon);
             req_data_t scbResult, monResult;
-            case(mon.cmd)
+            case(mon.out_resp)
                 GOOD: begin
                     scbResult = (agt.op1) + (agt.op2); //Perform the operation
-                    monResult = mon.op1; //Get the result, which is stored in op1 field by the monitor
+                    monResult = mon.out_data; //Get the result, which is stored in op1 field by the monitor
 
                     if(monResult == scbResult) begin
                         successTests++;
@@ -315,19 +322,19 @@ package scbPKG;
                 end
                 INVL, ERR, NORE: begin
                     failedTests++;
-                    $display($time, ": Failed addition result verification! Monitor returned responce code: %0b", mon.cmd);
+                    $display($time, ": Failed addition result verification! Monitor returned responce code: %0b", mon.out_resp);
                 end
                 default:
                     $display($time, ": Error with the checkAdd case statement! Bad response code data!");
             endcase
         endfunction: checkAdd
 
-        function void checkSub(tb_trans agt, tb_trans mon);
+        function void checkSub(tb_trans agt, tb_trans_out mon);
             req_data_t scbResult, monResult;
-            case(mon.cmd)
+            case(mon.out_resp)
                 GOOD: begin
                     scbResult = (agt.op1) - (agt.op2); //Perform the operation
-                    monResult = mon.op1; //Get the result, which is stored in op1 field by the monitor
+                    monResult = mon.out_data; //Get the result, which is stored in op1 field by the monitor
 
                     if(monResult == scbResult) begin
                         successTests++;
@@ -340,19 +347,19 @@ package scbPKG;
                 end
                 INVL, ERR, NORE: begin
                     failedTests++;
-                    $display($time, ": Failed subtraction result verification! Monitor returned responce code: %0b", mon.cmd);
+                    $display($time, ": Failed subtraction result verification! Monitor returned responce code: %0b", mon.out_resp);
                 end
                 default:
                     $display($time, ": Error with the checkSub case statement! Bad response code data!");
             endcase
         endfunction: checkSub
 
-        function void checkLShift(tb_trans agt, tb_trans mon);
+        function void checkLShift(tb_trans agt, tb_trans_out mon);
             req_data_t scbResult, monResult;
-            case(mon.cmd)
+            case(mon.out_resp)
                 GOOD: begin
                     scbResult = (agt.op1) <<< (agt.op2); //Perform the operation (Arithmetic shift left)
-                    monResult = mon.op1; //Get the result, which is stored in op1 field by the monitor
+                    monResult = mon.out_data; //Get the result, which is stored in op1 field by the monitor
 
                     if(monResult == scbResult) begin
                         successTests++;
@@ -365,19 +372,19 @@ package scbPKG;
                 end
                 INVL, ERR, NORE: begin
                     failedTests++;
-                    $display($time, ": Failed left shift result verification! Monitor returned responce code: %0b", mon.cmd);
+                    $display($time, ": Failed left shift result verification! Monitor returned responce code: %0b", mon.out_resp);
                 end
                 default:
                     $display($time, ": Error with the checkLShift case statement! Bad response code data!");
             endcase
         endfunction: checkLShift
 
-        function void checkRShift(tb_trans agt, tb_trans mon);
+        function void checkRShift(tb_trans agt, tb_trans_out mon);
             req_data_t scbResult, monResult;
-            case(mon.cmd)
+            case(mon.out_resp)
                 GOOD: begin
                     scbResult = (agt.op1) >>> (agt.op2); //Perform the operation (Arithmetic shift right)
-                    monResult = mon.op1; //Get the result, which is stored in op1 field by the monitor
+                    monResult = mon.out_data; //Get the result, which is stored in op1 field by the monitor
 
                     if(monResult == scbResult) begin
                         successTests++;
@@ -390,7 +397,7 @@ package scbPKG;
                 end
                 INVL, ERR, NORE: begin
                     failedTests++;
-                    $display($time, ": Failed right shift result verification! Monitor returned responce code: %0b", mon.cmd);
+                    $display($time, ": Failed right shift result verification! Monitor returned responce code: %0b", mon.out_resp);
                 end
                 default:
                     $display($time, ": Error with the checkRShift case statement! Bad response code data!");

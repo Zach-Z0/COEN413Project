@@ -6,17 +6,15 @@ Will need a wrapper class to neatly connect the interface to the DUT.
 
 Needs to be sensisitve to NEGATIVE EDGE of clock as defined in the design specification
 Zachary Zazzara (40096894)
-zexi si (40175054)
+ze xi si (40175054)
 
 Created on: March 29th, 2024
 */
 
-//`ifndef TB_IF_DEFINE
-//`define TB_IF_DEFINE
 
 import defs::*;
 
-interface tb_if(input wire ifClk); //clock will come frop TB top module, which doesn't exist yet
+interface tb_if(input ifClk); //clock will come frop TB top module, which doesn't exist yet
 
     //clock passed from top, doesn't get declared here
     //Reset, goes into DUT
@@ -106,5 +104,3 @@ interface tb_if(input wire ifClk); //clock will come frop TB top module, which d
         output ifTag4_out
     );
 endinterface
-
-//`endif

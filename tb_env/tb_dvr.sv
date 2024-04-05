@@ -9,7 +9,6 @@ Possibly could have used threads here to split the driver up into 4 "lanes" so i
 Oh well...
 
 Zachary Zazzara (40096894)
-zexi si (40175054)
 
 Created on: March 29th, 2024
 */
