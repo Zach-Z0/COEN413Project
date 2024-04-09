@@ -17,8 +17,7 @@ reated on: March 28th, 2024
 // we are importing all as package...
 
 
-//==============THIS I UNDERSTAND======================
-//we declared the class from previous 
+//====================================
 import transPKG::*;
 import defs::*;
 import agentPKG::*;
@@ -63,23 +62,20 @@ class env;
 	tb_dvr dvr;
 	tb_scb scb;
 
-	//initialization of our classes
+	//initialization
 	//============================================ 
 
 	//Instanciate mailboxes here
 
 	//Mailboxes: Generator -> Agent, Agent -> Driver, Monitor -> Scoreboard/Checker (and back)
-	//driver inject
-	
-	//scoreboard responsible of output
 
 	mailbox #(tb_trans) gen2agt, agt2dvr, agt2scb, scb2agt;
 
 	mailbox #(tb_trans_out) mon2scb;
 
 	//========================================
+	
 	//Interface declaration
-
 	virtual tb_if interf;
 
 	function new(virtual tb_if interf);
