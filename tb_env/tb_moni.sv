@@ -4,6 +4,7 @@ Monitor class for the testbench, watches the DUT outputs and passes the results 
 Only needs to monitor the actual OUTPUTS of the DUT.
 
 Zachary Zazzara (40096894)
+ze xi si (40175054) added not ended 
 
 Created on: March 30th, 2024
 */
@@ -28,12 +29,16 @@ package moniPKG;
         function new(virtual tb_if.Monitor tb_monitor_if, mailbox #(tb_trans_out) mon2scb);
             this.tb_monitor_if = tb_monitor_if;
             this.mon2scb = mon2scb;
-            ended = 0;
+            this.ended = 0;
         endfunction: new
+
+        //===========================================================================
+
 
         task main(); //main daemon, starts 4 threads that monitor ports
             $display("Starting Monitor Daemon");
             //Start 4 tasks that each monitor 1 of the 4 output ports of the DUT for activity
+            //start once only
             @(tb_monitor_if.monitor_cb);
             fork
                 listenPort1();
@@ -43,6 +48,8 @@ package moniPKG;
             join //Wait for all port mini-monitors to finish
             $display($time, ": Monitor daemon stopping."); //Debug
         endtask: main
+        //==========================================================================
+
 
         task listenPort1();
             //out_resp_t resp1;
@@ -52,7 +59,7 @@ package moniPKG;
                 if(resp1 === NORE)
                     @(posedge tb_monitor_if.monitor_cb.ifResp1_out); //Wait for something to happen on the port
                 */
-                if(tb_monitor_if.monitor_cb.ifResp1_out != NORE) begin //If response is anything but NOP, do the following
+                if(!ended && tb_monitor_if.monitor_cb.ifResp1_out != NORE) begin //If response is anything but NOP, do the following
                     //Instanciate new transaction object & assign the recieved data to it
                     this.tr1 = new();
                     tr1.out_resp = tb_monitor_if.monitor_cb.ifResp1_out;
@@ -69,6 +76,8 @@ package moniPKG;
             end while(!ended); //Loop forever while end of test isn't flagged.
         endtask: listenPort1
 
+
+
         task listenPort2(); //same as listenPort1
             //out_resp_t resp2;
             do begin
@@ -77,7 +86,7 @@ package moniPKG;
                 if(resp2 === NORE)
                     @(posedge tb_monitor_if.monitor_cb.ifResp2_out);
                 */
-                if(tb_monitor_if.monitor_cb.ifResp2_out != NORE) begin 
+                if(!ended && tb_monitor_if.monitor_cb.ifResp2_out != NORE) begin 
                     //Instanciate new transaction object & assign the recieved data to it
                     this.tr2 = new();
                     tr2.out_resp = tb_monitor_if.monitor_cb.ifResp2_out;
@@ -94,6 +103,9 @@ package moniPKG;
             end while(!ended);
         endtask: listenPort2
 
+
+
+
         task listenPort3(); //same as listenPort1
             //out_resp_t resp3;
             do begin
@@ -103,7 +115,7 @@ package moniPKG;
                     @(posedge tb_monitor_if.monitor_cb.ifResp3_out);
                 */
                 //Instanciate new transaction object & assign the recieved data to it
-                if(tb_monitor_if.monitor_cb.ifResp3_out != NORE) begin 
+                if(!ended && tb_monitor_if.monitor_cb.ifResp3_out != NORE) begin 
                     this.tr3 = new();
                     tr3.out_resp = tb_monitor_if.monitor_cb.ifResp3_out;
                     tr3.out_data = tb_monitor_if.monitor_cb.ifData3_out;
@@ -119,6 +131,9 @@ package moniPKG;
             end while(!ended);
         endtask: listenPort3
 
+
+
+
         task listenPort4(); //same as listenPort1
             //out_resp_t resp4;
             do begin
@@ -127,7 +142,7 @@ package moniPKG;
                 if(resp4 === NORE)
                     @(posedge tb_monitor_if.monitor_cb.ifResp4_out); 
                 */
-                    if(tb_monitor_if.monitor_cb.ifResp4_out != NORE) begin 
+                    if(!ended && tb_monitor_if.monitor_cb.ifResp4_out != NORE) begin 
                     //Instanciate new transaction object & assign the recieved data to it
                     this.tr4 = new();
                     tr4.out_resp = tb_monitor_if.monitor_cb.ifResp4_out;
@@ -147,5 +162,7 @@ package moniPKG;
         task wrap_up();
             ended = 1;
         endtask: wrap_up
+
+
     endclass: tb_moni
 endpackage

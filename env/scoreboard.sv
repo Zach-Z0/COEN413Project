@@ -17,6 +17,7 @@ Gameplan:
     --Return tag/key to the agent via dedicated mailbox
 
 zachary zazzara (40096894)
+ze xi si (40175054)
 */
 // import transPKG::*;
 //`include "tb_env/defs.sv"
@@ -66,13 +67,25 @@ package scbPKG;
 
         task main(); //main Scoreboard/checker daemon
             $display("Starting Scoreboard daemon.");
+			#10;
             fork
                 checkMailAgent();
+				
                 checkMailMonitor();
-                validatePort1();
+				
+			join
+			#10;
+			fork begin 
+			    #10;
+				validatePort1();
+				
                 validatePort2();
+				
+				$display("trying this");
                 validatePort3();
+				
                 validatePort4();
+				end
             join
             $display($time, ": Scoreboard/Checker daemon stopping."); //Debug
             ->internalEnded;
@@ -86,8 +99,12 @@ package scbPKG;
 
         task checkMailAgent(); //Continuously watches mailboxes for incoming transactions and sorts them accordingly
             tb_trans agt_tr; //Hold incoming mail somewhere
+			$display($time, " Checkmail starting");
+			
             forever begin
+				//#10;
                 agt2scb.get(agt_tr); //Wait for incoming mail
+				$display($time, " incoming mail");
                 case(agt_tr.port)
                     //Move a copy of the transaction into the apropriate array
                     //Note: Items indexed by their TAG
@@ -99,17 +116,20 @@ package scbPKG;
                         $display($time, ": Error with the scb/checker checkAgentMail case statement! Bad port data! (?)"); 
                 endcase
 
-                if(endBit == 1)
+                if(endBit == 1) begin
                     if(agt2scb.num() == 0) begin
                         $display("checkMailAgent end condition has been met");
                         break;
                     end
+
+                end
             end
             $display($time, ": Scoreboard/Checker checkMailAgent task stopping."); //Debug
         endtask: checkMailAgent
 
         task checkMailMonitor(); //same thing as checkMailAgent task
             tb_trans_out mon_tr;
+			$display($time, " checkmailmonitor starting");
             forever begin
                 mon2scb.get(mon_tr);
                 case(mon_tr.port)
@@ -121,11 +141,12 @@ package scbPKG;
                         $display($time, ": Error with the scb/checker checkMonitorMail case statement! Bad port data! (?)");   
                 endcase
 
-                if(endBit == 1 )
+                if(endBit == 1 ) begin
                     if(mon2scb.num() == 0) begin
                         $display("checkMailMonitor end condition has been met");
                         break;           
                     end
+                end
             end
             $display($time, ": Scoreboard/Checker checkMailMonitor task stopping."); //Debug
         endtask: checkMailMonitor
@@ -133,7 +154,7 @@ package scbPKG;
         task validatePort1();
             tb_trans p1_agt;
             tb_trans_out p1_mon;
-
+			$display($time, " validate1 starting");
             forever begin
                 if(monQue1.size() > 0) begin //Wait for monitor transactions to appear in the queue.
                     p1_mon = monQue1.pop_front();
@@ -142,6 +163,7 @@ package scbPKG;
                     //will run at least once BEFORE checking the condition
                     do begin
                         if(agtArr1.exists(p1_mon.out_tag)) begin
+						//#10;
                             p1_agt = agtArr1[p1_mon.out_tag]; //Copy the reference out of array
                             agtArr1.delete(p1_mon.out_tag); //delete the object from the array
                             
@@ -158,7 +180,7 @@ package scbPKG;
                             max_trans_cnt--; //Decrement how many transactions are left to test
                             scb2agt.put(p1_agt); //Now that we're done, return the key to the agent for re-use
                         end
-                        #10; //For stability in case agent array does not have the needed tag yet
+                        //For stability in case agent array does not have the needed tag yet
                     end while(!agtArr1.exists(p1_mon.out_tag)); 
                 end
                 if(checkFinished()) begin
@@ -168,7 +190,7 @@ package scbPKG;
                 if((endBit == 1) && (monQue1.size() == 0) && (agtArr1.size() == 0)) //Checking if finished at End of Test
                     break;
 
-                #10; //For stability in case monitor queue is empty
+                //#10;//For stability in case monitor queue is empty
             end
             $display($time, ": Scoreboard/Checker validatePort1 task stopping."); //Debug
         endtask: validatePort1
@@ -176,7 +198,7 @@ package scbPKG;
         task validatePort2();
             tb_trans p2_agt;
             tb_trans_out p2_mon;
-
+			$display($time, " validate2 starting");
             forever begin
                 if(monQue2.size() > 0) begin //Wait for monitor transactions to appear in the queue.
                     p2_mon = monQue2.pop_front();
@@ -201,7 +223,7 @@ package scbPKG;
                             max_trans_cnt--; //Decrement how many transactions are left to test
                             scb2agt.put(p2_agt); //Now that we're done, return the key to the agent for re-use
                         end
-                        #10; //For stability in case agent array does not have the needed tag yet
+                        //For stability in case agent array does not have the needed tag yet
                     end while(!agtArr2.exists(p2_mon.out_tag)); 
                 end
                 if(checkFinished()) begin
@@ -212,15 +234,17 @@ package scbPKG;
                 if((endBit == 1) && (monQue2.size() == 0) && (agtArr2.size() == 0)) //Checking if finished at End of Test
                     break;
 
-                #10; //For stability in case monitor queue is empty
+                //For stability in case monitor queue is empty
             end
             $display($time, ": Scoreboard/Checker validatePort2 task stopping."); //Debug
         endtask: validatePort2
+		
+		
 
         task validatePort3();
             tb_trans p3_agt;
             tb_trans_out p3_mon;
-
+			$display($time, " validate3 starting");
             forever begin
                 if(monQue3.size() > 0) begin //Wait for monitor transactions to appear in the queue.
                     p3_mon = monQue3.pop_front();
@@ -245,7 +269,7 @@ package scbPKG;
                             max_trans_cnt--; //Decrement how many transactions are left to test
                             scb2agt.put(p3_agt); //Now that we're done, return the key to the agent for re-use
                         end
-                        #10; //For stability in case agent array does not have the needed tag yet
+                        //#100; //For stability in case agent array does not have the needed tag yet
                     end while(!agtArr3.exists(p3_mon.out_tag)); 
                 end
                 if(checkFinished()) begin
@@ -256,7 +280,7 @@ package scbPKG;
                 if((endBit == 1) && (monQue3.size() == 0) && (agtArr3.size() == 0)) //Checking if finished at End of Test
                     break;
 
-                #10; //For stability in case monitor queue is empty
+                //#10; //For stability in case monitor queue is empty
             end
             $display($time, ": Scoreboard/Checker validatePort3 task stopping."); //Debug
         endtask: validatePort3
@@ -264,6 +288,7 @@ package scbPKG;
         task validatePort4();
             tb_trans p4_agt;
             tb_trans_out p4_mon;
+			$display($time, " validate4 starting");
             forever begin
                 if(monQue4.size() > 0) begin //Wait for monitor transactions to appear in the queue.
                     p4_mon = monQue4.pop_front();
@@ -288,7 +313,7 @@ package scbPKG;
                             max_trans_cnt--; //Decrement how many transactions are left to test
                             scb2agt.put(p4_agt); //Now that we're done, return the key to the agent for re-use
                         end
-                        #10; //For stability in case agent array does not have the needed tag yet
+                        //For stability in case agent array does not have the needed tag yet
                     end while(!agtArr4.exists(p4_mon.out_tag)); 
                 end
                 if(checkFinished()) begin
@@ -299,7 +324,7 @@ package scbPKG;
                 if((endBit == 1) && (monQue4.size() == 0) && (agtArr4.size() == 0)) //Checking if finished at End of Test
                     break;
 
-                #10; //For stability in case monitor queue is empty
+                //For stability in case monitor queue is empty
             end
             $display($time, ": Scoreboard/Checker validatePort4 task stopping."); //Debug
         endtask: validatePort4

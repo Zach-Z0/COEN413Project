@@ -12,12 +12,13 @@
     might not be the right way to do things, i'm not sure, we'll see once I start the scoreboard class.
 
     Zachary Zazzara (40096894)
+	ze xi si (40175054)
 
     Created on: March 28th, 2024
     */
 
     //`include "tb_env/tb_gen.sv"
-package agentPKG;   
+    package agentPKG;   
     import defs::*;
     import transPKG::*;
 
@@ -60,7 +61,7 @@ package agentPKG;
                 gen2agt.get(tr); //Get a transaction object
 
                 releaseKey(); //Check to see if any keys are waiting to be returned
-                #10 //This is just here cuz it makes me feel better... shouldn't be necessary.
+                #50 //This is just here cuz it makes me feel better... shouldn't be necessary.
 
                 /*
                 Check which port the transaction wants, attempt to get it a key (secures it 1/4 of the tags)
@@ -72,7 +73,7 @@ package agentPKG;
                         if(tr.cmd == NOP) begin //If the transaction is a NOP, do not lock a tag/key, just send it to driver
                             $display($time, ": Port[%b] current transaction ID: %0d is NOP, no tag assigned.", tr.port, tr.id); //DEBUG
                         end 
-                        else begin
+                        if (tr.cmd != NOP) begin
                         in1_sem.get(1);
                         tr.tag = in1_avl_tags.pop_front();
                         $display($time, ": Assigning port %b current transaction ID: %0d tag: %b", tr.port, tr.id, tr.tag); //DEBUG
@@ -82,7 +83,7 @@ package agentPKG;
                         if(tr.cmd == NOP) begin //If the transaction is a NOP, do not lock a tag/key, just send it to driver
                             $display($time, ": Port[%b] current transaction ID: %0d is NOP, no tag assigned.",tr.port, tr.id); //DEBUG
                         end
-                        else begin
+                        if (tr.cmd != NOP) begin
                         in2_sem.get(1);
                         tr.tag = in2_avl_tags.pop_front();
                         $display($time, ": Assigning port %b current transaction ID: %0d tag: %b", tr.port, tr.id, tr.tag); //DEBUG
@@ -92,7 +93,7 @@ package agentPKG;
                         if(tr.cmd == NOP) begin //If the transaction is a NOP, do not lock a tag/key, just send it to driver
                             $display($time, ": Port[%b] current transaction ID: %0d is NOP, no tag assigned.", tr.port, tr.id); //DEBUG
                         end
-                        else begin
+                        if (tr.cmd != NOP) begin
                         in3_sem.get(1);
                         tr.tag = in3_avl_tags.pop_front();
                         $display($time, ": Assigning port %b current transaction ID: %0d tag: %b", tr.port, tr.id, tr.tag); //DEBUG
@@ -102,7 +103,7 @@ package agentPKG;
                         if(tr.cmd == NOP) begin //If the transaction is a NOP, do not lock a tag/key, just send it to driver
                             $display($time, ": Port[%b] current transaction ID: %0d is NOP, no tag assigned.", tr.port, tr.id); //DEBUG
                         end 
-                        else begin
+                        if (tr.cmd != NOP) begin
                         in4_sem.get(1);
                         tr.tag = in4_avl_tags.pop_front();
                         $display($time, ": Assigning port %b current transaction ID: %0d tag: %b", tr.port, tr.id, tr.tag); //DEBUG
@@ -160,5 +161,12 @@ package agentPKG;
         task wrap_up();
             internalEnded = 1;
         endtask: wrap_up
+		
+		function void push_to_scoreboard(tb_trans transaction);
+			agt2scb.put(transaction);
+		endfunction
+		
+		
+		
     endclass: tb_agt
 endpackage

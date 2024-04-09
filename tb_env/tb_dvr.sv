@@ -6,6 +6,8 @@ Also handles reset commands and passing through the clock.
 Needs to work closely with the interface.
 
 Zachary Zazzara (40096894)
+ze xi si (40175054) 
+tho there was little to no effect on diagn
 
 Created on: March 29th, 2024
 */
@@ -62,6 +64,7 @@ package dvrPKG;
                                 tb_master_if.driver_cb.ifReq1_cmd_in <= tr.cmd;
                                 tb_master_if.driver_cb.ifReq1_data_in <= tr.op1; //Send in operand 1
                                 tb_master_if.driver_cb.ifReq1_tag_in <= tr.tag;
+
                                 @(this.tb_master_if.driver_cb); //Wait for a clock pulse
                                 tb_master_if.driver_cb.ifReq1_cmd_in <= 0;
                                 tb_master_if.driver_cb.ifReq1_data_in <= tr.op2; //Send in operand 2
@@ -82,6 +85,7 @@ package dvrPKG;
                                 tb_master_if.driver_cb.ifReq2_cmd_in <= tr.cmd;
                                 tb_master_if.driver_cb.ifReq2_data_in <= tr.op1; //Send in operand 1
                                 tb_master_if.driver_cb.ifReq2_tag_in <= tr.tag;
+
                                 @(this.tb_master_if.driver_cb); //Wait for a clock pulse
                                 tb_master_if.driver_cb.ifReq2_cmd_in <= 0;
                                 tb_master_if.driver_cb.ifReq2_data_in <= tr.op2; //Send in operand 2
@@ -138,11 +142,14 @@ package dvrPKG;
                 //This MAY be necessary if 2 commands try to go to the same port back to back.
                 //Honestly I'm not sure if this is needed or not. Either it is, or it will cause timing issues.
                 //Won't know until testing phase.
+				//#10;
+				//============================
                 @(this.tb_master_if.driver_cb);
-
-                if((ended == 1) && (agt2dvr.num() == 0)) 
+                if((ended && agt2dvr.num() == 0)) 
                     break; //If end of test flag as been set and the mailbox is empty, break from the forever loop
             end
+			
+			
             $display($time, ": Ending Driver Daemon.");
         endtask: main
 
@@ -169,7 +176,7 @@ package dvrPKG;
 
             $display("Got to pre-waiting 4 clock cycles for the reset");
             //Wait the 3 clock cycles
-            repeat(3) @(this.tb_master_if.driver_cb);
+            repeat(10) @(this.tb_master_if.driver_cb);
             $display("Got to post-waiting 4 clock cycles for the reset");
             //Set reset back to LO, reset finished.
             tb_master_if.driver_cb.ifRst <= 0;

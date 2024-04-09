@@ -19,6 +19,9 @@ interface tb_if(input ifClk);
     //clock passed from top, doesn't get declared here
     //Reset, goes into DUT
     logic ifRst;
+    
+    //just repeat ok
+    //===========================================
 
     //Input side of DUT
     logic [REQ_CMD_WIDTH-1:0] ifReq1_cmd_in, ifReq2_cmd_in, ifReq3_cmd_in, ifReq4_cmd_in;
@@ -29,6 +32,8 @@ interface tb_if(input ifClk);
     logic [OUT_RESP_WIDTH-1:0] ifResp1_out, ifResp2_out, ifResp3_out, ifResp4_out;
     logic [REQ_DATA_WIDTH-1:0] ifData1_out, ifData2_out, ifData3_out, ifData4_out;
     logic [REQ_TAG_WIDTH-1:0] ifTag1_out, ifTag2_out, ifTag3_out, ifTag4_out;
+
+    //=========================================
 
     clocking driver_cb @(negedge ifClk); 
         //default timings? 
@@ -48,6 +53,8 @@ interface tb_if(input ifClk);
         output ifReq4_tag_in;
     endclocking
 
+    //=====================================
+
     clocking monitor_cb @(negedge ifClk); 
         //Timing question applies here too.
         //Only need outputs here for the transactions going DUT -> Monitor and nothing else
@@ -65,11 +72,16 @@ interface tb_if(input ifClk);
         input ifTag4_out;
     endclocking
 
+    //========================================
+
     //Modports go here
     modport Master(clocking driver_cb); //Modport for the driver to assert signals into the interface
+    
     modport Monitor(clocking monitor_cb); //Modport for the monitor to assert signals into the interface (?)
 
+
     //Modport for the DUT to read signals from the interface
+    //DUT is slave
     modport Slave(
         input ifRst,
         input ifClk,

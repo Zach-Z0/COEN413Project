@@ -10,10 +10,15 @@ Environment class which instanciates the following:
 Starts tests, pre-tests, and post-tests.
 
 Zachary Zazzara (40096894)
+ze xi si (40175054)
 reated on: March 28th, 2024
 
 */
+// we are importing all as package...
 
+
+//==============THIS I UNDERSTAND======================
+//we declared the class from previous 
 import transPKG::*;
 import defs::*;
 import agentPKG::*;
@@ -21,6 +26,9 @@ import genPKG::*;
 import dvrPKG::*;
 import moniPKG::*;
 import scbPKG::*;
+
+//=========================================
+
 //`include "tb_env/tb_if.sv"
 //`include "tb_env/tb_agt.sv"
 //`include "tb_env/tb_dvr.sv"
@@ -28,34 +36,50 @@ import scbPKG::*;
 //`include "tb_env/tb_gen.sv"
 //`include "env/scoreboard.sv"
 
-class test_cfg; //Configuration class
-	//THIS SETS max_trans_cnt for other modules
-	rand int trans_cnt;
+//test constraint here ==========================
+//randomized
+class test_cfg; 
+	
+	rand int trans_cnt = 0;
 
-	//For now arbitrarily chosen constraint based off labs 3 & 4.
 	constraint c_trans_cnt {
 		(trans_cnt > 0) && (trans_cnt < 100); 
 	}
+
 endclass: test_cfg
+
+//============================================== 
 
 class env;
 
 	//Instanciate test config
 	test_cfg tcfg;
 
+	//============================================
 	//Instanciate transactors
-	tb_gen gen;
+    tb_gen gen;
 	tb_agt agt;
 	tb_moni mon;
 	tb_dvr dvr;
 	tb_scb scb;
 
+	//initialization of our classes
+	//============================================ 
+
 	//Instanciate mailboxes here
+
 	//Mailboxes: Generator -> Agent, Agent -> Driver, Monitor -> Scoreboard/Checker (and back)
+	//driver inject
+	
+	//scoreboard responsible of output
+
 	mailbox #(tb_trans) gen2agt, agt2dvr, agt2scb, scb2agt;
+
 	mailbox #(tb_trans_out) mon2scb;
 
+	//========================================
 	//Interface declaration
+
 	virtual tb_if interf;
 
 	function new(virtual tb_if interf);
@@ -68,6 +92,7 @@ class env;
 		agt2dvr = new();
 		agt2scb = new();
 		scb2agt = new(); //Key return
+
 		mon2scb = new();
 
 
@@ -107,6 +132,7 @@ class env;
 		#500;
 		$display("Got to tesk task pre-fork");
 		end
+
 		fork
 			gen.main();
 		join_none
@@ -115,24 +141,44 @@ class env;
 
 	//Clean up function post running tests, waiting for everything to finish
 	virtual task post_test();
+		
+		bit gen_completed = 0;
+		bit scb_completed =0; 
 		$display($time, ": Reached before fork post test.");
-		fork
+		#10;
+		fork begin
 			$display($time, ": Waiting for gen and scb to end trigger.");
 			wait(gen.ended.triggered());
+			gen_completed =1;
+			$display ("gen end triggered");
+			agt.wrap_up();
+			end
+			
+			begin
 			wait(scb.ended.triggered());
-
-			//may wanna shuffle the order of these around later
+			$display ("scb end triggered");
+			scb_completed = 1;
+			dvr.wrap_up();
+			mon.wrap_up();
+			
+			end
+			
 		join
+		
 		$display($time, ": Reached post_test post-join.");
-		agt.wrap_up();
-		dvr.wrap_up();
-		mon.wrap_up();
+		
+		
 	endtask: post_test
 
 	task run();
 		$display("Got to the main Env's run function");
 		pre_test();
+		$display("Run pre-test completed");
+		#100;
 		test();
+		$display("Run test completed");
+		#100000;
 		post_test();
+		$display("Run post test completed");
 	endtask: run
 endclass: env
