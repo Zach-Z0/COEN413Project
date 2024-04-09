@@ -4,7 +4,7 @@ Monitor class for the testbench, watches the DUT outputs and passes the results 
 Only needs to monitor the actual OUTPUTS of the DUT.
 
 Zachary Zazzara (40096894)
-ze xi si (40175054) added not ended 
+ze xi si (40175054) 
 
 Created on: March 30th, 2024
 */
@@ -38,7 +38,6 @@ package moniPKG;
         task main(); //main daemon, starts 4 threads that monitor ports
             $display("Starting Monitor Daemon");
             //Start 4 tasks that each monitor 1 of the 4 output ports of the DUT for activity
-            //start once only
             @(tb_monitor_if.monitor_cb);
             fork
                 listenPort1();

@@ -10,16 +10,12 @@ ze xi si (40175054)
 Created on: March 29th, 2024
 */
 
-//`include "hdl/calc2_top.v"
-
-//going into DUT
 
 module wrapper (tb_if.Slave interf);
        //"INTERFACE NAME" -> "DUT INTERNAL NAME"
        //Legend: .DUT_wire_name(interface.interface_wire_name)
 
        calc2_top DUT (
-              //make sense to connect everything here
               .c_clk(interf.ifClk),
               .reset(interf.ifRst),
 
@@ -55,19 +51,10 @@ module wrapper (tb_if.Slave interf);
               .out_tag3(interf.ifTag3_out),
               .out_tag4(interf.ifTag4_out),
               //======================================= MISC
-
-
-
-              //used to scan internal state, not used for this lab...
               .scan_in(),
               .scan_out(),
-
-
-              //Internal ALU, there might be multiple. trying these clocks
               .a_clk(interf.ifClk),
               .b_clk(interf.ifClk)
-
-
        );
        //The "Misc" section is signals that aren't mentioned anywhere in the design specification but are present in calc2_top.sv
        //No idea what to do with these wire connections.

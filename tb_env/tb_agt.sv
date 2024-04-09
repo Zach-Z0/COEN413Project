@@ -12,7 +12,6 @@
     might not be the right way to do things, i'm not sure, we'll see once I start the scoreboard class.
 
     Zachary Zazzara (40096894)
-	ze xi si (40175054)
 
     Created on: March 28th, 2024
     */
@@ -160,13 +159,6 @@
 
         task wrap_up();
             internalEnded = 1;
-        endtask: wrap_up
-		
-		function void push_to_scoreboard(tb_trans transaction);
-			agt2scb.put(transaction);
-		endfunction
-		
-		
-		
+        endtask: wrap_up		
     endclass: tb_agt
 endpackage

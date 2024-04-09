@@ -70,20 +70,14 @@ package scbPKG;
 			#10;
             fork
                 checkMailAgent();
-				
                 checkMailMonitor();
-				
 			join
 			#10;
 			fork begin 
 			    #10;
 				validatePort1();
-				
                 validatePort2();
-				
-				$display("trying this");
                 validatePort3();
-				
                 validatePort4();
 				end
             join
@@ -99,7 +93,7 @@ package scbPKG;
 
         task checkMailAgent(); //Continuously watches mailboxes for incoming transactions and sorts them accordingly
             tb_trans agt_tr; //Hold incoming mail somewhere
-			$display($time, " Checkmail starting");
+			$display($time, ": Checkmail starting");
 			
             forever begin
 				//#10;
@@ -163,7 +157,6 @@ package scbPKG;
                     //will run at least once BEFORE checking the condition
                     do begin
                         if(agtArr1.exists(p1_mon.out_tag)) begin
-						//#10;
                             p1_agt = agtArr1[p1_mon.out_tag]; //Copy the reference out of array
                             agtArr1.delete(p1_mon.out_tag); //delete the object from the array
                             

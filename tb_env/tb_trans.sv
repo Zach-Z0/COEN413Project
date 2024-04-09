@@ -3,7 +3,7 @@
 Transaction object class that should then be used by the generator class.
 
 Zachary Zazzara (40096894)
-ze xi si (40175054)
+ze xi si (40175054) --Added display function
 
 Created on: March 27th, 2024
 
@@ -12,7 +12,6 @@ package transPKG;
 	import defs::*;
 
 	class tb_trans;
-		// imported from defs
 		rand req_cmd_t cmd;
 		rand req_data_t op1; //Doubles as response holder when used by monitor!
 		rand req_data_t op2; //two datas for + and - ops, maybe apply constraints later?
@@ -80,7 +79,6 @@ package transPKG;
 		int id;
 		int port;
 
-		//make sense
 		out_resp_t out_resp;
 		req_data_t out_data;
 		req_tag_t out_tag;

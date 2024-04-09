@@ -3,7 +3,6 @@
 Starting file that calls literally everything else. This file intanciates the environment, runs it, then everything else.
 
 Zachary Zazzara (40096894)
-ze xi si (40175054)
 
 Created on: March 29th, 2024
 */

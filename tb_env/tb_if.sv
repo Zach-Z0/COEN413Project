@@ -6,7 +6,6 @@ Will need a wrapper class to neatly connect the interface to the DUT.
 
 Needs to be sensisitve to NEGATIVE EDGE of clock as defined in the design specification
 Zachary Zazzara (40096894)
-ze xi si (40175054)
 
 Created on: March 29th, 2024
 */
@@ -20,7 +19,6 @@ interface tb_if(input ifClk);
     //Reset, goes into DUT
     logic ifRst;
     
-    //just repeat ok
     //===========================================
 
     //Input side of DUT
@@ -81,7 +79,6 @@ interface tb_if(input ifClk);
 
 
     //Modport for the DUT to read signals from the interface
-    //DUT is slave
     modport Slave(
         input ifRst,
         input ifClk,

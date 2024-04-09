@@ -6,8 +6,6 @@ Also handles reset commands and passing through the clock.
 Needs to work closely with the interface.
 
 Zachary Zazzara (40096894)
-ze xi si (40175054) 
-tho there was little to no effect on diagn
 
 Created on: March 29th, 2024
 */
@@ -142,7 +140,6 @@ package dvrPKG;
                 //This MAY be necessary if 2 commands try to go to the same port back to back.
                 //Honestly I'm not sure if this is needed or not. Either it is, or it will cause timing issues.
                 //Won't know until testing phase.
-				//#10;
 				//============================
                 @(this.tb_master_if.driver_cb);
                 if((ended && agt2dvr.num() == 0)) 
@@ -176,7 +173,7 @@ package dvrPKG;
 
             $display("Got to pre-waiting 4 clock cycles for the reset");
             //Wait the 3 clock cycles
-            repeat(10) @(this.tb_master_if.driver_cb);
+            repeat(3) @(this.tb_master_if.driver_cb);
             $display("Got to post-waiting 4 clock cycles for the reset");
             //Set reset back to LO, reset finished.
             tb_master_if.driver_cb.ifRst <= 0;

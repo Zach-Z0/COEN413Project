@@ -3,7 +3,6 @@
  Generator class that creates transaction objects then sends them to the agent class VIA a mailbox.
 
  Zachary Zazzara (40096894)
- ze xi si (40175054)
 
 Created on: March 28th, 2024
 
@@ -47,7 +46,7 @@ package genPKG;
 
                     //wait & get transaction
                     temp_tr = get_transaction();
-		    temp_tr.display();
+		            temp_tr.display();
 
 
                     if(temp_tr.cmd != NOP)
